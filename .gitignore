@@ -72,3 +72,10 @@ htmlcov/
 
 # Vercel
 .vercel
+
+# SQL migration files (may contain sensitive data)
+*.sql
+
+# Development scripts
+setup_demo.py
+seed_admin.py

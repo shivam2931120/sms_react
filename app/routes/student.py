@@ -103,14 +103,14 @@ def fees():
 @student_required
 def timetable():
     student = Student.query.filter_by(user_id=current_user.id).first()
-    timetable = TimeTable.query.filter_by(class_id=student.class_id).order_by(TimeTable.day, TimeTable.start_time).all()
+    timetable = TimeTable.query.filter_by(class_id=student.class_id).order_by(TimeTable.day_of_week, TimeTable.start_time).all()
     
     # Group by day
     days = {}
     for t in timetable:
-        if t.day not in days:
-            days[t.day] = []
-        days[t.day].append(t)
+        if t.day_of_week not in days:
+            days[t.day_of_week] = []
+        days[t.day_of_week].append(t)
     
     return render_template('student/timetable.html', student=student, days=days)
 
@@ -121,3 +121,35 @@ def homework():
     student = Student.query.filter_by(user_id=current_user.id).first()
     homework = Homework.query.filter_by(class_id=student.class_id).order_by(Homework.due_date.desc()).limit(20).all()
     return render_template('student/homework.html', student=student, homework=homework)
+
+@student.route('/hall-ticket')
+@login_required
+@student_required
+def hall_ticket():
+    from app.models import Exam
+    
+    student = Student.query.filter_by(user_id=current_user.id).first()
+    if not student:
+        flash('Student profile not found.', 'warning')
+        return redirect(url_for('student.dashboard'))
+    
+    # Check if all fees are paid
+    pending_fees = Fee.query.filter_by(student_id=student.id, status='Pending').all()
+    pending_count = len(pending_fees)
+    total_pending = sum(f.amount for f in pending_fees)
+    
+    if pending_count > 0:
+        flash(f'You have {pending_count} pending fee(s) totaling ₹{total_pending:.2f}. Clear all dues to download hall ticket.', 'warning')
+        return render_template('student/hall_ticket_blocked.html', 
+                               student=student, 
+                               pending_fees=pending_fees,
+                               total_pending=total_pending)
+    
+    # Get upcoming exams
+    today = date.today()
+    upcoming_exams = Exam.query.filter(Exam.date >= today).order_by(Exam.date).all()
+    
+    return render_template('student/hall_ticket.html', 
+                           student=student,
+                           exams=upcoming_exams,
+                           generated_date=today)

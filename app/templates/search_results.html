@@ -3,22 +3,27 @@
 {% block content %}
 <div class="row mb-4 align-items-center">
     <div class="col">
-        <h2 class="h4 mb-1">Search Results</h2>
-        <p class="text-muted mb-0">
-            Found {{ students|length + teachers|length + users|length }} results for "<strong>{{ query }}</strong>"
+        <h2 class="h4 mb-1"><i class="bi bi-search" style="color: #E10600;"></i> Search Results</h2>
+        <p class="mb-0" style="color: #D1D5DB;">
+            Found {{ students|length + teachers|length + users|length + classes|length + subjects|length }} results for
+            "<strong>{{ query }}</strong>"
+            {% if context != 'all' %}<span class="badge ms-2" style="background: rgba(225,6,0,0.15); color: #E10600;">in
+                {{ context|title }}</span>{% endif %}
         </p>
     </div>
 </div>
 
-{% if not students and not teachers and not users %}
+{% set total_results = students|length + teachers|length + users|length + classes|length + subjects|length %}
+
+{% if total_results == 0 %}
 <div class="card text-center py-5">
     <div class="card-body">
-        <div class="display-1 text-muted opacity-25 mb-3">
+        <div class="display-1 opacity-25 mb-3" style="color: #E10600;">
             <i class="bi bi-search"></i>
         </div>
-        <h5 class="text-muted">No results found</h5>
-        <p class="text-muted">Try checking your spelling or using a different keyword.</p>
-        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary mt-2">Back to Dashboard</a>
+        <h5 style="color: #D1D5DB;">No results found</h5>
+        <p style="color: #B0B8C4;">Try checking your spelling or using a different keyword.</p>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary mt-2">Back to Dashboard</a>
     </div>
 </div>
 {% endif %}
@@ -26,8 +31,9 @@
 <!-- Students Section -->
 {% if students %}
 <div class="card mb-4">
-    <div class="card-header bg-transparent border-bottom">
-        <h5 class="mb-0"><i class="bi bi-mortarboard-fill me-2 text-primary"></i> Students ({{ students|length }})</h5>
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-mortarboard-fill me-2" style="color: #E10600;"></i> Students ({{
+            students|length }})</h5>
     </div>
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
@@ -35,7 +41,6 @@
                 <tr>
                     <th>Name</th>
                     <th>Roll No</th>
-                    <th>Email</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -44,20 +49,18 @@
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            <div class="avatar bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3"
-                                style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                            <div class="avatar bg-primary me-3">
                                 <span class="fw-bold">{{ student.first_name[0] }}{{ student.last_name[0] }}</span>
                             </div>
                             <div>
-                                <h6 class="mb-0">{{ student.first_name }} {{ student.last_name }}</h6>
+                                <h6 class="mb-0" style="color: #FFFFFF;">{{ student.first_name }} {{ student.last_name
+                                    }}</h6>
                             </div>
                         </div>
                     </td>
-                    <td>{{ student.roll_no }}</td>
-                    <td>{{ student.email }}</td>
+                    <td style="color: #D1D5DB;">{{ student.roll_no or '-' }}</td>
                     <td>
                         <a href="#" class="btn btn-sm btn-outline-primary">View</a>
-                        <!-- Add edit/delete if needed -->
                     </td>
                 </tr>
                 {% endfor %}
@@ -70,15 +73,15 @@
 <!-- Teachers Section -->
 {% if teachers %}
 <div class="card mb-4">
-    <div class="card-header bg-transparent border-bottom">
-        <h5 class="mb-0"><i class="bi bi-person-badge-fill me-2 text-info"></i> Teachers ({{ teachers|length }})</h5>
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-person-badge-fill me-2" style="color: #E10600;"></i> Teachers ({{
+            teachers|length }})</h5>
     </div>
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Specialization</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -87,16 +90,78 @@
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            <div class="avatar bg-info bg-opacity-10 text-info rounded-circle p-2 me-3"
-                                style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                            <div class="avatar bg-primary me-3">
                                 <span class="fw-bold">{{ teacher.first_name[0] }}{{ teacher.last_name[0] }}</span>
                             </div>
                             <div>
-                                <h6 class="mb-0">{{ teacher.first_name }} {{ teacher.last_name }}</h6>
+                                <h6 class="mb-0" style="color: #FFFFFF;">{{ teacher.first_name }} {{ teacher.last_name
+                                    }}</h6>
                             </div>
                         </div>
                     </td>
-                    <td>{{ teacher.specialization }}</td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Classes Section -->
+{% if classes %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-building me-2" style="color: #E10600;"></i> Classes ({{ classes|length }})</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Grade</th>
+                    <th>Section</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cls in classes %}
+                <tr>
+                    <td style="color: #FFFFFF;">{{ cls.grade }}</td>
+                    <td style="color: #D1D5DB;">{{ cls.section }}</td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Subjects Section -->
+{% if subjects %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-book-fill me-2" style="color: #E10600;"></i> Subjects ({{ subjects|length }})
+        </h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Code</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in subjects %}
+                <tr>
+                    <td style="color: #FFFFFF;">{{ subject.name }}</td>
+                    <td style="color: #D1D5DB;">{{ subject.code or '-' }}</td>
                     <td>
                         <a href="#" class="btn btn-sm btn-outline-primary">View</a>
                     </td>
@@ -111,8 +176,8 @@
 <!-- Users Section -->
 {% if users %}
 <div class="card mb-4">
-    <div class="card-header bg-transparent border-bottom">
-        <h5 class="mb-0"><i class="bi bi-people-fill me-2 text-warning"></i> Users ({{ users|length }})</h5>
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-people-fill me-2" style="color: #E10600;"></i> Users ({{ users|length }})</h5>
     </div>
     <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
@@ -121,21 +186,18 @@
                     <th>Username</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in users %}
                 <tr>
                     <td>
-                        <span class="fw-bold">{{ user.username }}</span>
+                        <span class="fw-bold" style="color: #FFFFFF;">{{ user.username }}</span>
                     </td>
-                    <td>{{ user.email }}</td>
+                    <td style="color: #D1D5DB;">{{ user.email }}</td>
                     <td>
-                        <span class="badge bg-secondary bg-opacity-10 text-secondary">{{ user.role|upper }}</span>
-                    </td>
-                    <td>
-                        <a href="#" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        <span class="badge" style="background: rgba(225,6,0,0.15); color: #E10600;">{{ user.role|upper
+                            }}</span>
                     </td>
                 </tr>
                 {% endfor %}

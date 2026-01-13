@@ -4,42 +4,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Portal - SMS</title>
+    <title>Shikshan - Teacher Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
-    <div class="admin-layout">
-        <aside class="sidebar">
+    <div class="wrapper">
+        <nav id="sidebar" class="sidebar">
             <div class="sidebar-header">
-                <h3><i class="bi bi-person-badge"></i> Teacher Portal</h3>
+                <h3><span style="color: #E10600;">◆</span> Shikshan</h3>
+                <span class="role-badge">Teacher</span>
             </div>
             <ul class="sidebar-nav">
+                <li class="nav-section">MAIN</li>
                 <li><a href="{{ url_for('teacher.dashboard') }}"
                         class="{% if 'dashboard' in request.endpoint %}active{% endif %}">
-                        <i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+                        <i class="bi bi-grid-1x2-fill"></i> <span>Dashboard</span></a></li>
                 <li><a href="{{ url_for('teacher.schedule') }}"
                         class="{% if 'schedule' in request.endpoint %}active{% endif %}">
-                        <i class="bi bi-calendar-week"></i> My Schedule</a></li>
+                        <i class="bi bi-calendar-week"></i> <span>My Schedule</span></a></li>
+
+                <li class="nav-section">ACTIONS</li>
                 <li><a href="{{ url_for('teacher.mark_attendance') }}"
                         class="{% if 'mark_attendance' in request.endpoint %}active{% endif %}">
-                        <i class="bi bi-calendar-check"></i> Mark Attendance</a></li>
+                        <i class="bi bi-calendar-check"></i> <span>Mark Attendance</span></a></li>
                 <li><a href="{{ url_for('teacher.enter_marks') }}"
                         class="{% if 'enter_marks' in request.endpoint %}active{% endif %}">
-                        <i class="bi bi-pencil-square"></i> Enter Marks</a></li>
-                <li class="mt-auto"><a href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-left"></i>
-                        Logout</a></li>
+                        <i class="bi bi-pencil-square"></i> <span>Enter Marks</span></a></li>
             </ul>
-        </aside>
-        <main class="main-content">
-            <header class="top-header">
-                <span>Welcome, {{ teacher.first_name }} {{ teacher.last_name }}</span>
-                {% if teacher.department %}<span class="badge bg-primary">{{ teacher.department.name }}</span>{% endif
-                %}
-            </header>
-            <div class="content-area">
+            <div class="sidebar-footer">
+                <a href="{{ url_for('auth.profile') }}" class="d-block mb-2"
+                    style="color: #B0B8C4; text-decoration: none;">
+                    <i class="bi bi-person-circle"></i> <span>My Profile</span>
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="logout-btn">
+                    <i class="bi bi-box-arrow-left"></i> <span>Logout</span>
+                </a>
+            </div>
+        </nav>
+
+        <div id="content">
+            <nav class="top-header">
+                <button type="button" id="sidebarToggle" class="btn">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="header-right">
+                    <span class="user-info">
+                        <i class="bi bi-person-badge" style="color: #E10600;"></i>
+                        {% if teacher %}{{ teacher.first_name }} {{ teacher.last_name }}{% else %}Teacher{% endif %}
+                    </span>
+                </div>
+            </nav>
+
+            <div class="main-content">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                 {% for category, message in messages %}
@@ -50,9 +69,53 @@
                 {% endwith %}
                 {% block content %}{% endblock %}
             </div>
-        </main>
+        </div>
     </div>
+
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function openMobileSidebar() {
+            sidebar?.classList.add('mobile-open');
+            sidebarOverlay?.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileSidebar() {
+            sidebar?.classList.remove('mobile-open');
+            sidebarOverlay?.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        sidebarToggle?.addEventListener('click', function () {
+            if (window.innerWidth < 992) {
+                sidebar?.classList.contains('mobile-open') ? closeMobileSidebar() : openMobileSidebar();
+            } else {
+                sidebar?.classList.toggle('collapsed');
+                document.getElementById('content')?.classList.toggle('expanded');
+            }
+        });
+
+        sidebarOverlay?.addEventListener('click', closeMobileSidebar);
+
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', () => window.innerWidth < 992 && closeMobileSidebar());
+        });
+    </script>
 </body>
 
 </html>

@@ -29,7 +29,7 @@ def dashboard():
     day_name = today.strftime('%A')
     
     # Today's classes from timetable
-    today_classes = TimeTable.query.filter_by(teacher_id=teacher_profile.id, day=day_name).order_by(TimeTable.start_time).all()
+    today_classes = TimeTable.query.filter_by(teacher_id=teacher_profile.id, day_of_week=day_name).order_by(TimeTable.start_time).all()
     
     # Classes taught (from timetable)
     all_timetable = TimeTable.query.filter_by(teacher_id=teacher_profile.id).all()
@@ -51,14 +51,14 @@ def dashboard():
 @teacher_required
 def schedule():
     teacher_profile = Teacher.query.filter_by(user_id=current_user.id).first()
-    timetable = TimeTable.query.filter_by(teacher_id=teacher_profile.id).order_by(TimeTable.day, TimeTable.start_time).all()
+    timetable = TimeTable.query.filter_by(teacher_id=teacher_profile.id).order_by(TimeTable.day_of_week, TimeTable.start_time).all()
     
     # Group by day
     days = {}
     for t in timetable:
-        if t.day not in days:
-            days[t.day] = []
-        days[t.day].append(t)
+        if t.day_of_week not in days:
+            days[t.day_of_week] = []
+        days[t.day_of_week].append(t)
     
     return render_template('teacher/schedule.html', teacher=teacher_profile, days=days)
 

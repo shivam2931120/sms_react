@@ -1,140 +1,69 @@
-# College Management System (SMS)
+# Shikshan - Education Management System
 
-A comprehensive Flask-based College/School Management System with admin, teacher, and student portals.
+A comprehensive education management platform built with Flask, designed for schools and colleges.
 
 ## Features
 
-### 🎛️ Admin Dashboard
-- Student, Teacher, Class, Subject management
-- Attendance tracking with analytics
-- Fee management
-- Library system
-- Exam & Homework management
-- Role-based permissions
+- 🎓 **Student Management** - Enrollment, profiles, classes
+- 👨‍🏫 **Teacher Portal** - Schedule, attendance, marks entry
+- 📅 **Timetable** - Calendar-based schedule view
+- 📊 **Analytics** - Performance and attendance insights
+- 💰 **Fee Management** - Track payments and dues
+- 🎫 **Hall Tickets** - Auto-generated (requires cleared fees)
+- 📱 **Mobile Responsive** - Works on all devices
 
-### 📊 Analytics
-- Attendance trends (30-day charts)
-- Student performance dashboard
-- Department-wise statistics
-
-### 👨‍🎓 Student Portal
-- View attendance, marks, fees
-- Class timetable
-- Homework assignments
-
-### 👨‍🏫 Teacher Portal
-- Mark attendance (bulk)
-- Enter grades
-- View personal schedule
-
-## Tech Stack
-
-- **Backend**: Flask, SQLAlchemy
-- **Database**: PostgreSQL (Supabase) / SQLite (local dev)
-- **Frontend**: Jinja2, Bootstrap 5, Chart.js
-- **Deployment**: Vercel (serverless)
-
-## Setup
+## Quick Start
 
 ### Local Development
 
-1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/sms.git
-cd sms
-```
-
-2. Create virtual environment:
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-```
-
-3. Install dependencies:
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-4. Set up environment variables:
-```bash
+# Set environment variables
 cp .env.example .env
-# Edit .env with your values
-```
+# Edit .env with your database credentials
 
-5. Initialize database:
-```bash
-flask db init
-flask db migrate -m "Initial migration"
-flask db upgrade
-```
+# Initialize database
+python init_db.py
 
-6. Run development server:
-```bash
+# Create admin user
+python create_admin.py
+
+# Run development server
 python run.py
 ```
 
-### Supabase Setup
-
-1. Create a new project at [supabase.com](https://supabase.com)
-2. Go to **Settings > Database > Connection string**
-3. Copy the URI and add to your `.env`:
-```
-DATABASE_URL=postgresql://postgres:[PASSWORD]@db.[PROJECT-REF].supabase.co:5432/postgres
-```
-
-### Vercel Deployment
+### Deploy to Vercel
 
 1. Push code to GitHub
 2. Connect repository to Vercel
 3. Add environment variables in Vercel dashboard:
-   - `SECRET_KEY`
-   - `DATABASE_URL` (Supabase connection string)
-4. Deploy!
+   - `SECRET_KEY` - Random secure string
+   - `DATABASE_URL` - PostgreSQL connection URL
+4. Deploy
 
 ## Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `SECRET_KEY` | Flask secret key for sessions |
-| `DATABASE_URL` | PostgreSQL connection string |
-| `FLASK_ENV` | `development` or `production` |
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `SECRET_KEY` | Session encryption key | Yes |
+| `DATABASE_URL` | PostgreSQL connection URL | Yes |
+| `FLASK_ENV` | `development` or `production` | No |
 
-## Default Admin Login
+## Database Setup (Supabase)
 
-After running migrations, create an admin user:
-```python
-from app import create_app, db
-from app.models import User
+1. Create a Supabase project
+2. Get the connection string from Settings > Database
+3. Add it as `DATABASE_URL` in your environment
 
-app = create_app()
-with app.app_context():
-    admin = User(username='admin', email='admin@example.com', role='admin')
-    admin.set_password('admin123')
-    db.session.add(admin)
-    db.session.commit()
-```
+## Tech Stack
 
-## Project Structure
-
-```
-sms/
-├── api/
-│   └── index.py          # Vercel serverless entry
-├── app/
-│   ├── routes/
-│   │   ├── admin.py      # Admin routes
-│   │   ├── student.py    # Student portal
-│   │   └── teacher.py    # Teacher portal
-│   ├── templates/
-│   ├── static/
-│   └── models.py
-├── config.py
-├── requirements.txt
-├── vercel.json
-└── run.py
-```
+- **Backend**: Flask, SQLAlchemy
+- **Database**: PostgreSQL (Supabase)
+- **Frontend**: Bootstrap 5, FullCalendar
+- **Deployment**: Vercel
 
 ## License
 
-MIT License
+MIT License - © 2024 Shikshan

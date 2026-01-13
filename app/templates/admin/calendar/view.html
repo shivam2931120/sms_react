@@ -1,51 +1,181 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="page-header d-flex justify-content-between align-items-center">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h2><i class="bi bi-calendar3"></i> Calendar</h2>
+        <h2 class="h4 mb-1"><i class="bi bi-calendar3" style="color: #E10600;"></i> Calendar</h2>
+        <p class="text-muted mb-0">Manage events and schedules</p>
     </div>
-    <a href="{{ url_for('admin.add_event') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Event</a>
+    <a href="{{ url_for('admin.add_event') }}" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i> Add Event</a>
 </div>
+
 <div class="card">
-    <div class="card-body">
+    <div class="card-body p-3 p-md-4">
         <div id="calendar"></div>
     </div>
 </div>
 
 <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css' rel='stylesheet' />
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+
 <style>
+    /* FullCalendar BLACK + RED Theme */
     #calendar {
         max-width: 100%;
         margin: 0 auto;
     }
 
     .fc {
-        --fc-border-color: var(--border-color);
-        --fc-button-bg-color: var(--accent-primary);
-        --fc-button-border-color: var(--accent-primary);
-        --fc-button-hover-bg-color: var(--accent-hover);
-        --fc-button-active-bg-color: var(--accent-primary);
-        --fc-today-bg-color: rgba(225, 6, 0, 0.1);
-        --fc-event-bg-color: var(--accent-primary);
-        --fc-event-border-color: var(--accent-primary);
+        --fc-border-color: rgba(255, 255, 255, 0.08);
+        --fc-button-bg-color: #E10600;
+        --fc-button-border-color: #E10600;
+        --fc-button-hover-bg-color: #FF1A1A;
+        --fc-button-hover-border-color: #FF1A1A;
+        --fc-button-active-bg-color: #B00020;
+        --fc-button-active-border-color: #B00020;
+        --fc-today-bg-color: rgba(225, 6, 0, 0.15);
+        --fc-event-bg-color: #E10600;
+        --fc-event-border-color: #E10600;
+        --fc-page-bg-color: transparent;
+        --fc-neutral-bg-color: rgba(255, 255, 255, 0.03);
+        --fc-list-event-hover-bg-color: rgba(225, 6, 0, 0.1);
     }
 
-    .fc-theme-standard td,
-    .fc-theme-standard th {
-        border-color: var(--border-color);
+    /* Calendar Header */
+    .fc .fc-toolbar-title {
+        color: #FFFFFF !important;
+        font-weight: 700;
+        font-size: 1.5rem;
     }
 
-    .fc-col-header-cell-cushion,
-    .fc-daygrid-day-number {
-        color: var(--text-primary);
+    /* Navigation Buttons */
+    .fc .fc-button {
+        font-weight: 600;
+        text-transform: capitalize;
+        padding: 0.5rem 1rem;
+        border-radius: 8px !important;
     }
 
-    .fc-toolbar-title {
-        color: var(--text-primary) !important;
-        font-family: var(--font-heading);
+    .fc .fc-button-primary:not(:disabled).fc-button-active,
+    .fc .fc-button-primary:not(:disabled):active {
+        background-color: #B00020;
+        border-color: #B00020;
+    }
+
+    /* Today Button */
+    .fc .fc-today-button {
+        background-color: transparent !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: #C4C4C4 !important;
+    }
+
+    .fc .fc-today-button:hover {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        color: #FFFFFF !important;
+    }
+
+    /* Table Header */
+    .fc .fc-col-header-cell {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.08);
+        padding: 0.75rem 0;
+    }
+
+    .fc .fc-col-header-cell-cushion {
+        color: #C4C4C4;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Day Numbers */
+    .fc .fc-daygrid-day-number {
+        color: #FFFFFF;
+        font-weight: 500;
+        padding: 0.5rem;
+    }
+
+    .fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+        background: #E10600;
+        color: white;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Day Cells */
+    .fc .fc-daygrid-day {
+        border-color: rgba(255, 255, 255, 0.06);
+        min-height: 100px;
+    }
+
+    .fc .fc-daygrid-day:hover {
+        background: rgba(225, 6, 0, 0.05);
+    }
+
+    .fc .fc-day-other .fc-daygrid-day-number {
+        color: #6B7280;
+    }
+
+    /* Events */
+    .fc .fc-event {
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .fc .fc-event:hover {
+        filter: brightness(1.2);
+    }
+
+    /* Week View */
+    .fc .fc-timegrid-slot {
+        border-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .fc .fc-timegrid-axis-cushion {
+        color: #9CA3AF;
+    }
+
+    /* List View */
+    .fc .fc-list {
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .fc .fc-list-day-cushion {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .fc .fc-list-day-text,
+    .fc .fc-list-day-side-text {
+        color: #E10600;
+        font-weight: 600;
+    }
+
+    .fc .fc-list-event:hover td {
+        background: rgba(225, 6, 0, 0.08);
+    }
+
+    .fc .fc-list-event-time,
+    .fc .fc-list-event-title {
+        color: #C4C4C4;
+    }
+
+    /* Scrollbar */
+    .fc .fc-scroller::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .fc .fc-scroller::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
     }
 </style>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
@@ -63,7 +193,10 @@
                         .then(() => calendar.refetchEvents());
                 }
             },
-            themeSystem: 'standard'
+            themeSystem: 'standard',
+            height: 'auto',
+            dayMaxEvents: 3,
+            eventDisplay: 'block'
         });
         calendar.render();
     });

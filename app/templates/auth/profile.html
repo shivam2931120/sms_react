@@ -1,0 +1,179 @@
+{% if current_user.role == 'admin' %}
+{% extends "base.html" %}
+{% elif current_user.role == 'teacher' %}
+{% extends "teacher/base.html" %}
+{% elif current_user.role == 'student' %}
+{% extends "student/base.html" %}
+{% else %}
+{% extends "base.html" %}
+{% endif %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h4 mb-1"><i class="bi bi-person-circle" style="color: #E10600;"></i> My Profile</h2>
+        <p class="mb-0" style="color: #B0B8C4;">Manage your account settings</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Profile Info Card -->
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-person-badge" style="color: #E10600;"></i> Account Information
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('auth.update_profile') }}" id="profileForm">
+                    <div class="mb-3">
+                        <label class="form-label"
+                            style="color: #B0B8C4; font-size: 0.8rem; text-transform: uppercase;">Username</label>
+                        <input type="text" class="form-control" value="{{ current_user.username }}" disabled
+                            style="background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.06); color: #9CA3AF;">
+                        <small style="color: #6B7280;">Username cannot be changed</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"
+                            style="color: #B0B8C4; font-size: 0.8rem; text-transform: uppercase;">Email</label>
+                        <input type="email" class="form-control" name="email" value="{{ current_user.email }}" required
+                            style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #FFFFFF;">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"
+                            style="color: #B0B8C4; font-size: 0.8rem; text-transform: uppercase;">Role</label>
+                        <input type="text" class="form-control" value="{{ current_user.role|title }}" disabled
+                            style="background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.06); color: #9CA3AF;">
+                    </div>
+
+                    {% if profile %}
+                    <div class="mb-3">
+                        <label class="form-label"
+                            style="color: #B0B8C4; font-size: 0.8rem; text-transform: uppercase;">Phone</label>
+                        <input type="tel" class="form-control" name="phone" value="{{ profile.phone or '' }}"
+                            style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #FFFFFF;">
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-primary" id="updateBtn">
+                        <i class="bi bi-check-lg me-2"></i> Save Changes
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Card -->
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-shield-lock" style="color: #E10600;"></i> Change Password</div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('auth.change_password') }}" id="passwordForm">
+                    <div class="mb-3">
+                        <label class="form-label"
+                            style="color: #B0B8C4; font-size: 0.8rem; text-transform: uppercase;">Current
+                            Password</label>
+                        <input type="password" class="form-control" name="current_password" required
+                            style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #FFFFFF;">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"
+                            style="color: #B0B8C4; font-size: 0.8rem; text-transform: uppercase;">New Password</label>
+                        <input type="password" class="form-control" name="new_password" id="new_password" required
+                            minlength="6"
+                            style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #FFFFFF;"
+                            placeholder="Min 6 characters">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"
+                            style="color: #B0B8C4; font-size: 0.8rem; text-transform: uppercase;">Confirm New
+                            Password</label>
+                        <input type="password" class="form-control" name="confirm_password" id="confirm_password"
+                            required
+                            style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #FFFFFF;">
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-primary" id="pwdBtn">
+                        <i class="bi bi-key me-2"></i> Change Password
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Details -->
+    {% if profile %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-info-circle" style="color: #E10600;"></i> Profile Details</div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="p-3 rounded" style="background: rgba(255,255,255,0.03);">
+                            <small style="color: #6B7280; text-transform: uppercase; font-size: 0.7rem;">Full
+                                Name</small>
+                            <p class="mb-0 fw-bold" style="color: #FFFFFF;">{{ profile.first_name }} {{
+                                profile.last_name }}</p>
+                        </div>
+                    </div>
+                    {% if current_user.role == 'student' %}
+                    <div class="col-md-4">
+                        <div class="p-3 rounded" style="background: rgba(255,255,255,0.03);">
+                            <small style="color: #6B7280; text-transform: uppercase; font-size: 0.7rem;">Roll No</small>
+                            <p class="mb-0 fw-bold" style="color: #FFFFFF;">{{ profile.roll_no or '-' }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded" style="background: rgba(255,255,255,0.03);">
+                            <small style="color: #6B7280; text-transform: uppercase; font-size: 0.7rem;">Class</small>
+                            <p class="mb-0 fw-bold" style="color: #FFFFFF;">{{ profile.enrolled_class.grade if
+                                profile.enrolled_class else '-' }}-{{ profile.enrolled_class.section if
+                                profile.enrolled_class else '' }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if current_user.role == 'teacher' %}
+                    <div class="col-md-4">
+                        <div class="p-3 rounded" style="background: rgba(255,255,255,0.03);">
+                            <small
+                                style="color: #6B7280; text-transform: uppercase; font-size: 0.7rem;">Qualification</small>
+                            <p class="mb-0 fw-bold" style="color: #FFFFFF;">{{ profile.qualification or '-' }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 rounded" style="background: rgba(255,255,255,0.03);">
+                            <small
+                                style="color: #6B7280; text-transform: uppercase; font-size: 0.7rem;">Department</small>
+                            <p class="mb-0 fw-bold" style="color: #FFFFFF;">{{ profile.department.name if
+                                profile.department else '-' }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    document.getElementById('profileForm').addEventListener('submit', function () {
+        document.getElementById('updateBtn').classList.add('btn-loading');
+    });
+
+    document.getElementById('passwordForm').addEventListener('submit', function (e) {
+        var newPwd = document.getElementById('new_password').value;
+        var confirmPwd = document.getElementById('confirm_password').value;
+
+        if (newPwd !== confirmPwd) {
+            e.preventDefault();
+            alert('New passwords do not match!');
+            return;
+        }
+
+        document.getElementById('pwdBtn').classList.add('btn-loading');
+    });
+</script>
+{% endblock %}

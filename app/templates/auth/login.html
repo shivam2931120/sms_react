@@ -1,58 +1,66 @@
 {% extends "base.html" %}
 
 {% block public_content %}
-<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
     <div class="col-md-5 col-lg-4">
         <div class="text-center mb-4">
-            <div
-                class="bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center rounded-3 p-3 mb-3">
-                <i class="bi bi-building-fill fs-2"></i>
+            <div class="d-inline-flex align-items-center justify-content-center rounded-3 p-3 mb-3"
+                style="background: rgba(225, 6, 0, 0.12);">
+                <i class="bi bi-mortarboard-fill fs-1" style="color: #E10600;"></i>
             </div>
-            <h4 class="fw-bold">Welcome Back</h4>
-            <p class="text-muted">Sign in to School Management System</p>
+            <h4 class="fw-bold" style="color: #FFFFFF;">Welcome Back</h4>
+            <p style="color: #B0B8C4;">Sign in to Shikshan</p>
         </div>
 
-        <div class="card border-0 shadow-lg rounded-4">
+        <div class="card" style="background: #121821; border: 1px solid rgba(255,255,255,0.06);">
             <div class="card-body p-4 p-sm-5">
                 <form method="POST" action="">
                     <div class="mb-4">
-                        <label for="email" class="form-label text-uppercase small fw-bold text-secondary">Username /
+                        <label for="email" class="form-label"
+                            style="color: #B0B8C4; font-size: 0.8rem; text-transform: uppercase;">Username /
                             Email</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 text-muted"><i
+                            <span class="input-group-text"
+                                style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #B0B8C4;"><i
                                     class="bi bi-person"></i></span>
-                            <input type="text" class="form-control bg-light border-start-0 ps-0" id="email" name="email"
-                                placeholder="Enter your ID" required>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Enter your ID"
+                                required
+                                style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #FFFFFF;">
                         </div>
                     </div>
                     <div class="mb-4">
-                        <label for="password"
-                            class="form-label text-uppercase small fw-bold text-secondary">Password</label>
+                        <label for="password" class="form-label"
+                            style="color: #B0B8C4; font-size: 0.8rem; text-transform: uppercase;">Password</label>
                         <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 text-muted"><i
+                            <span class="input-group-text"
+                                style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #B0B8C4;"><i
                                     class="bi bi-lock"></i></span>
-                            <input type="password" class="form-control bg-light border-start-0 ps-0" id="password"
-                                name="password" placeholder="••••••••" required>
+                            <input type="password" class="form-control" id="password" name="password"
+                                placeholder="••••••••" required
+                                style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #FFFFFF;">
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="remember">
-                            <label class="form-check-label small text-muted" for="remember">Remember me</label>
-                        </div>
-                        <a href="#" class="small text-decoration-none fw-bold">Forgot password?</a>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a href="{{ url_for('auth.forgot_password') }}"
+                            style="color: #E10600; font-size: 0.85rem;">Forgot Password?</a>
                     </div>
 
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary py-2 fw-bold">Sign In</button>
+                    <div class="d-grid mb-4">
+                        <button type="submit" class="btn btn-primary py-2 fw-bold btn-lg" id="loginBtn">Sign In</button>
                     </div>
                 </form>
+
+                <script>
+                    document.querySelector('form').addEventListener('submit', function () {
+                        document.getElementById('loginBtn').classList.add('btn-loading');
+                    });
+                </script>
             </div>
         </div>
 
-        <div class="text-center mt-4 text-muted small">
-            &copy; 2024 School Management System. All rights reserved.
+        <div class="text-center mt-4" style="color: #6B7280; font-size: 0.8rem;">
+            &copy; 2024 Shikshan - Education Management
         </div>
     </div>
 </div>

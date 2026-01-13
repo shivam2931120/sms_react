@@ -1,0 +1,67 @@
+{% extends "student/base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="h4 mb-1"><i class="bi bi-ticket-perforated" style="color: #E10600;"></i> Exam Hall Ticket</h2>
+        <p class="mb-0" style="color: #B0B8C4;">Clear all pending fees to download</p>
+    </div>
+</div>
+
+<!-- Warning Card -->
+<div class="card mb-4" style="border: 2px solid rgba(225, 6, 0, 0.5);">
+    <div class="card-body text-center py-5">
+        <div class="d-inline-flex align-items-center justify-content-center rounded-circle p-4 mb-4"
+            style="background: rgba(225, 6, 0, 0.12);">
+            <i class="bi bi-exclamation-triangle-fill" style="font-size: 3rem; color: #E10600;"></i>
+        </div>
+
+        <h4 style="color: #FFFFFF;">Fee Payment Required</h4>
+        <p style="color: #B0B8C4; max-width: 400px; margin: 0 auto;">
+            You have pending fees that must be cleared before downloading your exam hall ticket.
+        </p>
+
+        <div class="mt-4 p-4 rounded mx-auto" style="background: rgba(225, 6, 0, 0.08); max-width: 300px;">
+            <h3 style="color: #E10600; margin: 0;">₹{{ "%.2f"|format(total_pending) }}</h3>
+            <small style="color: #B0B8C4;">Total Pending Amount</small>
+        </div>
+    </div>
+</div>
+
+<!-- Pending Fees List -->
+<div class="card">
+    <div class="card-header"><i class="bi bi-list-check" style="color: #E10600;"></i> Pending Fees Breakdown</div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Fee Type</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fee in pending_fees %}
+                <tr>
+                    <td style="color: #FFFFFF;">{{ fee.fee_type or 'Fee' }}</td>
+                    <td style="color: #FFFFFF;">₹{{ "%.2f"|format(fee.amount) }}</td>
+                    <td style="color: #B0B8C4;">{{ fee.due_date.strftime('%d %b, %Y') if fee.due_date else '-' }}</td>
+                    <td>
+                        <span class="badge" style="background: rgba(225, 6, 0, 0.15); color: #E10600;">Pending</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="text-center mt-4">
+    <a href="{{ url_for('student.fees') }}" class="btn btn-primary">
+        <i class="bi bi-currency-dollar me-2"></i> View Fee Details
+    </a>
+    <a href="{{ url_for('student.dashboard') }}" class="btn btn-secondary ms-2">
+        <i class="bi bi-arrow-left me-2"></i> Back to Dashboard
+    </a>
+</div>
+{% endblock %}

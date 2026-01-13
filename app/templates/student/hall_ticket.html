@@ -1,0 +1,183 @@
+{% extends "student/base.html" %}
+{% block content %}
+<style>
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+
+        body {
+            background: white !important;
+        }
+
+        .card {
+            border: 2px solid #000 !important;
+            background: white !important;
+        }
+
+        * {
+            color: #000 !important;
+        }
+    }
+
+    .hall-ticket {
+        background: linear-gradient(135deg, #121821 0%, #0B0F14 100%);
+        border: 2px solid #E10600;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .ticket-header {
+        background: linear-gradient(135deg, #E10600 0%, #B00020 100%);
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .ticket-header h3 {
+        margin: 0;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .ticket-body {
+        padding: 2rem;
+    }
+
+    .student-photo {
+        width: 120px;
+        height: 150px;
+        border: 3px solid #E10600;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: #B0B8C4;
+        font-size: 0.875rem;
+    }
+
+    .info-value {
+        color: #FFFFFF;
+        font-weight: 600;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4 no-print">
+    <div>
+        <h2 class="h4 mb-1"><i class="bi bi-ticket-perforated" style="color: #E10600;"></i> Exam Hall Ticket</h2>
+        <p class="mb-0" style="color: #B0B8C4;">Your admit card for upcoming examinations</p>
+    </div>
+    <button onclick="window.print()" class="btn btn-primary">
+        <i class="bi bi-printer me-2"></i> Print Hall Ticket
+    </button>
+</div>
+
+<div class="hall-ticket mb-4">
+    <div class="ticket-header text-white">
+        <h3>ADMIT CARD</h3>
+        <p class="mb-0 mt-2 opacity-75">Shikshan - Education Management</p>
+    </div>
+
+    <div class="ticket-body">
+        <div class="row g-4">
+            <!-- Photo Section -->
+            <div class="col-md-3">
+                <div class="student-photo mx-auto">
+                    <i class="bi bi-person-fill" style="font-size: 3rem; color: #6B7280;"></i>
+                </div>
+                <div class="text-center mt-2">
+                    <small style="color: #6B7280;">Student Photo</small>
+                </div>
+            </div>
+
+            <!-- Student Details -->
+            <div class="col-md-9">
+                <div class="info-row">
+                    <span class="info-label">Student Name</span>
+                    <span class="info-value">{{ student.first_name }} {{ student.last_name }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Roll Number</span>
+                    <span class="info-value">{{ student.roll_no or '-' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Enrollment No</span>
+                    <span class="info-value">{{ student.enrollment_no or '-' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Class</span>
+                    <span class="info-value">{{ student.enrolled_class.grade if student.enrolled_class else '-' }}-{{
+                        student.enrolled_class.section if student.enrolled_class else '' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Father's Name</span>
+                    <span class="info-value">{{ student.parent_name or '-' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Generated On</span>
+                    <span class="info-value">{{ generated_date.strftime('%d %B, %Y') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Schedule -->
+        {% if exams %}
+        <div class="mt-4">
+            <h5 style="color: #E10600;" class="mb-3"><i class="bi bi-calendar3 me-2"></i> Examination Schedule</h5>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Exam Name</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for exam in exams %}
+                        <tr>
+                            <td style="color: #FFFFFF;">{{ exam.name }}</td>
+                            <td style="color: #B0B8C4;">{{ exam.date.strftime('%d %B, %Y') if exam.date else '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="mt-4 p-4 text-center" style="background: rgba(255,255,255,0.03); border-radius: 8px;">
+            <i class="bi bi-calendar-x" style="font-size: 2rem; color: #6B7280;"></i>
+            <p class="mb-0 mt-2" style="color: #B0B8C4;">No upcoming exams scheduled</p>
+        </div>
+        {% endif %}
+
+        <!-- Instructions -->
+        <div class="mt-4 p-3 rounded" style="background: rgba(225, 6, 0, 0.1); border-left: 3px solid #E10600;">
+            <h6 style="color: #E10600;"><i class="bi bi-info-circle me-2"></i> Important Instructions</h6>
+            <ul class="mb-0 ps-3" style="color: #B0B8C4; font-size: 0.875rem;">
+                <li>Carry this hall ticket to the examination hall</li>
+                <li>Report 30 minutes before exam time</li>
+                <li>Electronic devices are not allowed</li>
+                <li>Use blue/black pen only</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="text-center no-print">
+    <small style="color: #6B7280;">Fee Status: <span style="color: #22C55E;">✓ All Cleared</span></small>
+</div>
+{% endblock %}
