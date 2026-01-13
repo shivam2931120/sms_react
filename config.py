@@ -21,16 +21,10 @@ class Config:
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
-    # Serverless-optimized pool settings
+    # Minimal pool settings for serverless - no pooling
     SQLALCHEMY_ENGINE_OPTIONS = {
         'pool_pre_ping': True,
-        'pool_recycle': 60,
-        'pool_size': 1,
-        'max_overflow': 2,
-        'connect_args': {
-            'connect_timeout': 10,
-            'options': '-c statement_timeout=30000'
-        } if DATABASE_URL else {}
+        'pool_recycle': 30,
     }
     
     # Upload configurations
