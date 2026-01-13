@@ -40,5 +40,11 @@ def create_app(config_class=Config):
     # Import models to ensure they are registered with SQLAlchemy
     from app import models
     
+    # Create tables if they don't exist (for serverless/production)
+    with app.app_context():
+        try:
+            db.create_all()
+        except Exception as e:
+            app.logger.warning(f"Could not create tables: {e}")
+    
     return app
-

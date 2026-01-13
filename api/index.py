@@ -1,3 +1,4 @@
+from flask import Flask
 import sys
 import os
 
@@ -8,9 +9,5 @@ from app import create_app
 
 app = create_app()
 
-# For Vercel serverless
-def handler(request):
-    return app(request.environ, request.start_response)
-
-# WSGI application
-application = app
+# This is the entry point for Vercel
+# Vercel expects a WSGI app named 'app' or 'application'
