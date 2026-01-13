@@ -16,12 +16,21 @@ class Config:
         SQLALCHEMY_DATABASE_URI = DATABASE_URL
     else:
         # Fallback to SQLite for local development
-        SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'site.db')
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Serverless-optimized pool settings
     SQLALCHEMY_ENGINE_OPTIONS = {
         'pool_pre_ping': True,
-        'pool_recycle': 300,
+        'pool_recycle': 60,
+        'pool_size': 1,
+        'max_overflow': 2,
+        'connect_args': {
+            'connect_timeout': 10,
+            'options': '-c statement_timeout=30000'
+        } if DATABASE_URL else {}
     }
     
     # Upload configurations
