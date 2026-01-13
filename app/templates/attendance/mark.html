@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Mark Attendance</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" class="form-control" name="date" required value="{{ date }}">
+            </div>
+            <div class="mb-3">
+                <label for="class_id" class="form-label">Class</label>
+                <select class="form-select" name="class_id">
+                    {% for class in classes %}
+                    <option value="{{ class.id }}">{{ class.grade }}-{{ class.section }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Fetch Students</button>
+            <hr>
+            <!-- In real scenario, student list would show after selecting class -->
+            <p>Select class and date to proceed.</p>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-person-badge"></i> {{ 'Edit' if teacher else 'Add' }} Teacher</h2>
+    <p class="text-muted">{{ 'Update teacher details' if teacher else 'Create a new faculty account' }}</p>
+</div>
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <!-- Account Information (Only for new teachers) -->
+                {% if not teacher %}
+                <div class="col-12">
+                    <h5 class="form-section-title"><i class="bi bi-key"></i> Account Information</h5>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" placeholder="e.g., prof.smith" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" placeholder="teacher@college.edu" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                {% endif %}
+
+                <!-- Department & Position -->
+                <div class="col-12 mt-4">
+                    <h5 class="form-section-title"><i class="bi bi-diagram-3"></i> Department & Position</h5>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Department <span class="text-danger">*</span></label>
+                    <select class="form-select" name="department_id" required>
+                        <option value="">Select Department</option>
+                        {% for d in departments %}
+                        <option value="{{ d.id }}" {% if teacher and teacher.department_id==d.id %}selected{% endif %}>
+                            {{ d.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Specialization</label>
+                    <input type="text" class="form-control" name="specialization"
+                        value="{{ teacher.specialization if teacher else '' }}"
+                        placeholder="e.g., Data Structures, Physics">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Joining Date</label>
+                    <input type="date" class="form-control" name="joining_date"
+                        value="{{ teacher.joining_date.strftime('%Y-%m-%d') if teacher and teacher.joining_date else '' }}">
+                </div>
+
+                <!-- Personal Details -->
+                <div class="col-12 mt-4">
+                    <h5 class="form-section-title"><i class="bi bi-person"></i> Personal Details</h5>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">First Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="first_name"
+                        value="{{ teacher.first_name if teacher else '' }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="last_name"
+                        value="{{ teacher.last_name if teacher else '' }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Qualification</label>
+                    <input type="text" class="form-control" name="qualification"
+                        value="{{ teacher.qualification if teacher else '' }}" placeholder="e.g., M.Tech, Ph.D">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Phone</label>
+                    <input type="text" class="form-control" name="phone" value="{{ teacher.phone if teacher else '' }}"
+                        placeholder="+91 XXXXXXXXXX">
+                </div>
+
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> {{ 'Update' if teacher else 'Create' }} Teacher
+                    </button>
+                    <a href="{{ url_for('admin.teachers') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

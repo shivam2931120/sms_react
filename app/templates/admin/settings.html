@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-gear-fill"></i> Settings</h2>
+</div>
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">System Information</div>
+            <div class="card-body">
+                <p><strong>Application:</strong> Student Management System</p>
+                <p><strong>Version:</strong> 1.0.0</p>
+                <p><strong>Environment:</strong> Development</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Database</div>
+            <div class="card-body">
+                <p><strong>Type:</strong> SQLite (Dev) / PostgreSQL (Prod)</p>
+                <p><strong>Status:</strong> <span class="badge bg-success">Connected</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

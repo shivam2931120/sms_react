@@ -1,0 +1,45 @@
+{% extends "teacher/base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-calendar-week"></i> My Schedule</h2>
+</div>
+
+{% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] %}
+{% if day in days %}
+<div class="card mb-3">
+    <div class="card-header"><i class="bi bi-calendar-day"></i> {{ day }}</div>
+    <div class="card-body p-0">
+        <table class="table table-dark table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Subject</th>
+                    <th>Class</th>
+                    <th>Room</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in days[day] %}
+                <tr>
+                    <td>{{ t.start_time.strftime('%H:%M') if t.start_time else '' }} - {{ t.end_time.strftime('%H:%M')
+                        if t.end_time else '' }}</td>
+                    <td><strong>{{ t.subject.name if t.subject else 'N/A' }}</strong></td>
+                    <td>{{ t.class_info.grade }}-{{ t.class_info.section if t.class_info else 'N/A' }}</td>
+                    <td>{{ t.room or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+{% if not days %}
+<div class="card">
+    <div class="card-body empty-state"><i class="bi bi-calendar-x"></i>
+        <p>No schedule assigned</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

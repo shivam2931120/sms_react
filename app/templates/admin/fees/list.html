@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-currency-dollar"></i> Fees Management</h2>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        {% if fees %}
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Title</th>
+                        <th>Amount</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in fees %}
+                    <tr>
+                        <td>{{ f.student.first_name }} {{ f.student.last_name }}</td>
+                        <td>{{ f.title }}</td>
+                        <td>${{ f.amount }}</td>
+                        <td>{{ f.due_date.strftime('%Y-%m-%d') if f.due_date else '-' }}</td>
+                        <td><span
+                                class="badge {% if f.status == 'Paid' %}bg-success{% elif f.status == 'Pending' %}bg-warning{% else %}bg-danger{% endif %}">{{
+                                f.status }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state"><i class="bi bi-inbox"></i>
+            <p>No fee records</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

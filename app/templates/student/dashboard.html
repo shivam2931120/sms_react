@@ -1,0 +1,129 @@
+{% extends "student/base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2>Welcome, {{ student.first_name }}!</h2>
+    <p class="text-muted">{{ student.enrolled_class.grade }}-{{ student.enrolled_class.section if student.enrolled_class
+        }} | Roll No: {{ student.roll_no }}</p>
+</div>
+
+<!-- Quick Stats -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary">
+            <div class="card-body text-center">
+                <h2 class="mb-0">{{ att_percentage }}%</h2>
+                <small>Attendance (30 days)</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card {% if pending_fees > 0 %}bg-danger{% else %}bg-success{% endif %}">
+            <div class="card-body text-center">
+                <h2 class="mb-0">{{ pending_fees }}</h2>
+                <small>Pending Fees</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="mb-0">{{ recent_marks|length }}</h2>
+                <small>Recent Results</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="mb-0">{{ upcoming_hw|length }}</h2>
+                <small>Pending Homework</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Marks -->
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-trophy"></i> Recent Results</div>
+            <div class="card-body p-0">
+                {% if recent_marks %}
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Exam</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in recent_marks %}
+                        <tr>
+                            <td>{{ m.subject.name }}</td>
+                            <td>{{ m.exam.name if m.exam else 'N/A' }}</td>
+                            <td><span
+                                    class="badge bg-{{ 'success' if m.score_obtained/m.max_score*100 >= 60 else 'warning' }}">{{
+                                    m.score_obtained }}/{{ m.max_score }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="p-4 text-center text-muted">No results yet</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Homework -->
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-journal-text"></i> Upcoming Homework</div>
+            <div class="card-body p-0">
+                {% if upcoming_hw %}
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Subject</th>
+                            <th>Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for h in upcoming_hw %}
+                        <tr>
+                            <td>{{ h.title }}</td>
+                            <td>{{ h.subject.name }}</td>
+                            <td><span class="badge bg-info">{{ h.due_date.strftime('%b %d') }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="p-4 text-center text-muted">No pending homework</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcements -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-megaphone"></i> Announcements</div>
+            <div class="card-body">
+                {% if announcements %}
+                {% for a in announcements %}
+                <div class="alert alert-{{ a.priority if a.priority else 'info' }} mb-2">
+                    <strong>{{ a.title }}</strong><br>
+                    <small class="text-muted">{{ a.created_at.strftime('%Y-%m-%d') }}</small>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-muted mb-0">No announcements</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

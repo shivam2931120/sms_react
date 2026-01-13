@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-calendar-plus"></i> Add Event</h2>
+</div>
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label">Event Title</label>
+                    <input type="text" class="form-control" name="title" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Event Type</label>
+                    <select class="form-select" name="event_type">
+                        <option value="exam">Exam</option>
+                        <option value="holiday">Holiday</option>
+                        <option value="meeting">Meeting</option>
+                        <option value="sports">Sports</option>
+                        <option value="cultural">Cultural</option>
+                        <option value="deadline">Deadline</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" name="description" rows="2"></textarea>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Start Date</label>
+                    <input type="datetime-local" class="form-control" name="start_date" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">End Date</label>
+                    <input type="datetime-local" class="form-control" name="end_date">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Color</label>
+                    <input type="color" class="form-control form-control-color" name="color" value="#E10600">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">All Day?</label>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" name="all_day" id="all_day" checked>
+                        <label class="form-check-label" for="all_day">Yes</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Target Audience</label>
+                    <select class="form-select" name="target_role">
+                        <option value="all">Everyone</option>
+                        <option value="students">Students Only</option>
+                        <option value="teachers">Teachers Only</option>
+                    </select>
+                </div>
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Create Event</button>
+                    <a href="{{ url_for('admin.calendar') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

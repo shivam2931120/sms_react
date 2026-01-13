@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2><i class="bi bi-book-fill"></i> Subjects</h2>
+        <p class="text-muted mb-0">Total: {{ subjects|length }} subjects</p>
+    </div>
+    <div>
+        <a href="{{ url_for('admin.export_subjects') }}" class="btn btn-outline-light"><i class="bi bi-download"></i>
+            Export</a>
+        <a href="{{ url_for('admin.add_subject') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add
+            Subject</a>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Subject Name</th>
+                        <th>Department</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in subjects %}
+                    <tr>
+                        <td><code>{{ s.code }}</code></td>
+                        <td><strong>{{ s.name }}</strong></td>
+                        <td>
+                            {% if s.department %}
+                            <span class="badge bg-primary">{{ s.department.name }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">General</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_subject', id=s.id) }}"
+                                class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></a>
+                            <form action="{{ url_for('admin.delete_subject', id=s.id) }}" method="POST" class="d-inline"
+                                onsubmit="return confirm('Delete?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i
+                                        class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center py-4">No subjects found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

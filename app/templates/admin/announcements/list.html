@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2><i class="bi bi-megaphone-fill"></i> Announcements</h2>
+    </div>
+    <a href="{{ url_for('admin.add_announcement') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> New
+        Announcement</a>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        {% if announcements %}
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Priority</th>
+                        <th>Target</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in announcements %}
+                    <tr>
+                        <td><strong>{{ a.title }}</strong></td>
+                        <td><span
+                                class="badge {% if a.priority == 'urgent' %}bg-danger{% elif a.priority == 'high' %}bg-warning{% else %}bg-secondary{% endif %}">{{
+                                a.priority }}</span></td>
+                        <td>{{ a.target_role|title }}</td>
+                        <td>{{ a.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td><span class="badge {% if a.is_active %}bg-success{% else %}bg-secondary{% endif %}">{{
+                                'Active' if a.is_active else 'Inactive' }}</span></td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_announcement', id=a.id) }}"
+                                class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></a>
+                            <form action="{{ url_for('admin.delete_announcement', id=a.id) }}" method="POST"
+                                class="d-inline" onsubmit="return confirm('Delete?');"><button type="submit"
+                                    class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state"><i class="bi bi-megaphone"></i>
+            <p>No announcements yet</p><a href="{{ url_for('admin.add_announcement') }}" class="btn btn-primary">Create
+                First</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

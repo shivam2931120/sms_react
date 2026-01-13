@@ -1,0 +1,90 @@
+{% extends "teacher/base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-calendar-check"></i> Mark Attendance</h2>
+    <p class="text-muted">Select your class and date</p>
+</div>
+
+<!-- Class & Date Selection -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label class="form-label">Select Class</label>
+                <select class="form-select" name="class_id" required>
+                    <option value="">Choose a class...</option>
+                    {% for c in classes %}
+                    <option value="{{ c.id }}" {% if selected_class==c.id|string %}selected{% endif %}>
+                        {{ c.grade }}-{{ c.section }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Date</label>
+                <input type="date" class="form-control" name="date" value="{{ selected_date }}">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Load Students</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if students %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <span><i class="bi bi-people"></i> {{ students|length }} Students</span>
+        <div>
+            <button type="button" class="btn btn-sm btn-success" onclick="markAll('Present')">All Present</button>
+            <button type="button" class="btn btn-sm btn-danger" onclick="markAll('Absent')">All Absent</button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <form method="POST">
+            <input type="hidden" name="class_id" value="{{ selected_class }}">
+            <input type="hidden" name="date" value="{{ selected_date }}">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Roll</th>
+                        <th>Name</th>
+                        <th class="text-center">Present</th>
+                        <th class="text-center">Absent</th>
+                        <th class="text-center">Late</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in students %}
+                    <tr>
+                        <td><code>{{ s.roll_no }}</code></td>
+                        <td>{{ s.first_name }} {{ s.last_name }}</td>
+                        <td class="text-center"><input type="radio" class="form-check-input" name="status_{{ s.id }}"
+                                value="Present" {% if existing_attendance.get(s.id)=='Present' or not
+                                existing_attendance.get(s.id) %}checked{% endif %}></td>
+                        <td class="text-center"><input type="radio" class="form-check-input" name="status_{{ s.id }}"
+                                value="Absent" {% if existing_attendance.get(s.id)=='Absent' %}checked{% endif %}></td>
+                        <td class="text-center"><input type="radio" class="form-check-input" name="status_{{ s.id }}"
+                                value="Late" {% if existing_attendance.get(s.id)=='Late' %}checked{% endif %}></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="p-3"><button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save
+                    Attendance</button></div>
+        </form>
+    </div>
+</div>
+<script>function markAll(status) { document.querySelectorAll(`input[value="${status}"]`).forEach(r => r.checked = true); }</script>
+{% elif selected_class %}
+<div class="card">
+    <div class="card-body text-center py-4">No students in this class</div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body empty-state"><i class="bi bi-arrow-up-circle"></i>
+        <p>Select a class to mark attendance</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

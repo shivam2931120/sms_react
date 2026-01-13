@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-person-plus-fill"></i> {{ 'Edit' if student else 'Add' }} Student</h2>
+    <p class="text-muted">{{ 'Update student details' if student else 'Create a new student account' }}</p>
+</div>
+<div class="card">
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row g-3">
+                <!-- Account Information (Only for new students) -->
+                {% if not student %}
+                <div class="col-12">
+                    <h5 class="form-section-title"><i class="bi bi-key"></i> Account Information</h5>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" name="username" placeholder="e.g., john.doe" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" placeholder="student@college.edu" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" name="password" required>
+                </div>
+                {% endif %}
+
+                <!-- Academic Information -->
+                <div class="col-12 mt-4">
+                    <h5 class="form-section-title"><i class="bi bi-mortarboard"></i> Academic Information</h5>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Department <span class="text-danger">*</span></label>
+                    <select class="form-select" name="department_id" id="departmentSelect" required>
+                        <option value="">Select Department</option>
+                        {% for d in departments %}
+                        <option value="{{ d.id }}" {% if student and student.department_id==d.id %}selected{% endif %}>
+                            {{ d.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Class / Year <span class="text-danger">*</span></label>
+                    <select class="form-select" name="class_id" required>
+                        <option value="">Select Class</option>
+                        {% for c in classes %}
+                        <option value="{{ c.id }}" {% if student and student.class_id==c.id %}selected{% endif %}>
+                            {{ c.grade }}-{{ c.section }} {% if c.department %}({{ c.department.name[:3] }}){% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Roll Number <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="roll_no"
+                        value="{{ student.roll_no if student else '' }}" placeholder="e.g., 101" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Enrollment No.</label>
+                    <input type="text" class="form-control" name="enrollment_no"
+                        value="{{ student.enrollment_no if student else '' }}" placeholder="e.g., 2024/CS/001">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Admission Date</label>
+                    <input type="date" class="form-control" name="admission_date"
+                        value="{{ student.admission_date.strftime('%Y-%m-%d') if student and student.admission_date else '' }}">
+                </div>
+
+                <!-- Personal Information -->
+                <div class="col-12 mt-4">
+                    <h5 class="form-section-title"><i class="bi bi-person"></i> Personal Information</h5>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">First Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="first_name"
+                        value="{{ student.first_name if student else '' }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" name="last_name"
+                        value="{{ student.last_name if student else '' }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" class="form-control" name="dob"
+                        value="{{ student.dob.strftime('%Y-%m-%d') if student and student.dob else '' }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Gender</label>
+                    <select class="form-select" name="gender">
+                        <option value="">Select</option>
+                        <option value="Male" {% if student and student.gender=='Male' %}selected{% endif %}>Male
+                        </option>
+                        <option value="Female" {% if student and student.gender=='Female' %}selected{% endif %}>Female
+                        </option>
+                        <option value="Other" {% if student and student.gender=='Other' %}selected{% endif %}>Other
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Blood Group</label>
+                    <select class="form-select" name="blood_group">
+                        <option value="">Select</option>
+                        {% for bg in ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] %}
+                        <option value="{{ bg }}" {% if student and student.blood_group==bg %}selected{% endif %}>{{ bg
+                            }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Phone</label>
+                    <input type="text" class="form-control" name="phone" value="{{ student.phone if student else '' }}"
+                        placeholder="+91 XXXXXXXXXX">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" name="address"
+                        value="{{ student.address if student else '' }}">
+                </div>
+
+                <!-- Parent/Guardian Information -->
+                <div class="col-12 mt-4">
+                    <h5 class="form-section-title"><i class="bi bi-people"></i> Parent/Guardian Information</h5>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Parent/Guardian Name</label>
+                    <input type="text" class="form-control" name="parent_name"
+                        value="{{ student.parent_name if student else '' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Parent Phone</label>
+                    <input type="text" class="form-control" name="parent_phone"
+                        value="{{ student.parent_phone if student else '' }}">
+                </div>
+
+                <!-- Photo Upload -->
+                <div class="col-12 mt-4">
+                    <h5 class="form-section-title"><i class="bi bi-camera"></i> Photo</h5>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Student Photo</label>
+                    <input type="file" class="form-control" name="photo" accept="image/*" onchange="previewPhoto(this)">
+                    <small class="text-muted">Max 2MB. JPG/PNG recommended.</small>
+                </div>
+                <div class="col-md-6">
+                    {% if student and student.photo_file and student.photo_file != 'default.jpg' %}
+                    <img src="{{ url_for('static', filename='uploads/photos/' + student.photo_file) }}"
+                        id="photoPreview" class="rounded" style="max-height: 120px;">
+                    {% else %}
+                    <img id="photoPreview" class="rounded" style="max-height: 120px; display: none;">
+                    {% endif %}
+                </div>
+
+                <script>
+                    function previewPhoto(input) {
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                document.getElementById('photoPreview').src = e.target.result;
+                                document.getElementById('photoPreview').style.display = 'block';
+                            }
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> {{ 'Update' if student else 'Create' }} Student
+                    </button>
+                    <a href="{{ url_for('admin.students') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

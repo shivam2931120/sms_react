@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-book"></i> Add Book</h2>
+</div>
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" name="title" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Author</label>
+                    <input type="text" class="form-control" name="author">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">ISBN</label>
+                    <input type="text" class="form-control" name="isbn">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" name="category">
+                        <option value="textbook">Textbook</option>
+                        <option value="reference">Reference</option>
+                        <option value="fiction">Fiction</option>
+                        <option value="non-fiction">Non-Fiction</option>
+                        <option value="magazine">Magazine</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Total Copies</label>
+                    <input type="number" class="form-control" name="total_copies" value="1" min="1">
+                </div>
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Add Book</button>
+                    <a href="{{ url_for('admin.library') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

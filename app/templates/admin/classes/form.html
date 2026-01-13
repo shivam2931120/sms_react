@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-building"></i> {{ 'Edit' if cls else 'Add' }} Class</h2>
+</div>
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Department <span class="text-danger">*</span></label>
+                    <select class="form-select" name="department_id" required>
+                        <option value="">Select Department</option>
+                        {% for d in departments %}
+                        <option value="{{ d.id }}" {% if cls and cls.department_id==d.id %}selected{% endif %}>{{ d.name
+                            }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Year / Grade <span class="text-danger">*</span></label>
+                    <select class="form-select" name="grade" required>
+                        <option value="">Select Year</option>
+                        {% for y in ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Final Year'] %}
+                        <option value="{{ y }}" {% if cls and cls.grade==y %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Section <span class="text-danger">*</span></label>
+                    <select class="form-select" name="section" required>
+                        <option value="">Select Section</option>
+                        {% for s in ['A', 'B', 'C', 'D', 'E'] %}
+                        <option value="{{ s }}" {% if cls and cls.section==s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Class Teacher (Incharge)</label>
+                    <select class="form-select" name="class_teacher_id">
+                        <option value="">Not Assigned</option>
+                        {% for t in teachers %}
+                        <option value="{{ t.id }}" {% if cls and cls.class_teacher_id==t.id %}selected{% endif %}>
+                            {{ t.first_name }} {{ t.last_name }} {% if t.department %}({{ t.department.name[:10] }}){%
+                            endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save</button>
+                    <a href="{{ url_for('admin.classes') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

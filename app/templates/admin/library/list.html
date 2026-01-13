@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2><i class="bi bi-book-half"></i> Library</h2>
+        <p class="text-muted mb-0">Total: {{ books|length }} books</p>
+    </div>
+    <div>
+        <a href="{{ url_for('admin.export_library') }}" class="btn btn-outline-light"><i class="bi bi-download"></i>
+            Export</a>
+        <a href="{{ url_for('admin.library_issues') }}" class="btn btn-outline-info"><i class="bi bi-journal-check"></i>
+            Issued Books</a>
+        <a href="{{ url_for('admin.issue_book') }}" class="btn btn-outline-success"><i class="bi bi-send"></i> Issue</a>
+        <a href="{{ url_for('admin.add_book') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Book</a>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        {% if books %}
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Category</th>
+                        <th>Available / Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for b in books %}
+                    <tr>
+                        <td><strong>{{ b.title }}</strong></td>
+                        <td>{{ b.author or '-' }}</td>
+                        <td><code>{{ b.isbn or '-' }}</code></td>
+                        <td><span class="badge bg-secondary">{{ b.category or 'General' }}</span></td>
+                        <td>
+                            <span class="{% if b.available_copies == 0 %}text-danger{% else %}text-success{% endif %}">
+                                {{ b.available_copies }}
+                            </span> / {{ b.total_copies }}
+                        </td>
+                        <td>
+                            <form action="{{ url_for('admin.delete_book', id=b.id) if 'admin.delete_book' else '#' }}"
+                                method="POST" class="d-inline" onsubmit="return confirm('Delete?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i
+                                        class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state"><i class="bi bi-book"></i>
+            <p>No books in library</p><a href="{{ url_for('admin.add_book') }}" class="btn btn-primary">Add First
+                Book</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

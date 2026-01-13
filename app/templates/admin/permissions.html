@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-shield-lock"></i> Role Permissions</h2>
+    <p class="text-muted">Configure access permissions for each role</p>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <form method="POST">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Permission</th>
+                            <th class="text-center">Admin</th>
+                            <th class="text-center">Teacher</th>
+                            <th class="text-center">Student</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for code, name in all_permissions %}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input" name="admin_{{ code }}" {% if code in
+                                    roles.admin %}checked{% endif %} disabled>
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input" name="teacher_{{ code }}" {% if code in
+                                    roles.teacher %}checked{% endif %}>
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input" name="student_{{ code }}" {% if code in
+                                    roles.student %}checked{% endif %}>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-3">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save Permissions</button>
+                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="alert alert-info mt-3">
+    <i class="bi bi-info-circle"></i> <strong>Note:</strong> Admin role always has full access to all features.
+</div>
+{% endblock %}

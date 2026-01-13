@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-megaphone"></i> {{ 'Edit' if announcement else 'New' }} Announcement</h2>
+</div>
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" name="title"
+                        value="{{ announcement.title if announcement else '' }}" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Content</label>
+                    <textarea class="form-control" name="content" rows="5"
+                        required>{{ announcement.content if announcement else '' }}</textarea>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Priority</label>
+                    <select class="form-select" name="priority">
+                        <option value="low" {% if announcement and announcement.priority=='low' %}selected{% endif %}>
+                            Low</option>
+                        <option value="normal" {% if not announcement or announcement.priority=='normal' %}selected{%
+                            endif %}>Normal</option>
+                        <option value="high" {% if announcement and announcement.priority=='high' %}selected{% endif %}>
+                            High</option>
+                        <option value="urgent" {% if announcement and announcement.priority=='urgent' %}selected{% endif
+                            %}>Urgent</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Target Audience</label>
+                    <select class="form-select" name="target_role">
+                        <option value="all" {% if not announcement or announcement.target_role=='all' %}selected{% endif
+                            %}>Everyone</option>
+                        <option value="students" {% if announcement and announcement.target_role=='students'
+                            %}selected{% endif %}>Students Only</option>
+                        <option value="teachers" {% if announcement and announcement.target_role=='teachers'
+                            %}selected{% endif %}>Teachers Only</option>
+                    </select>
+                </div>
+                {% if announcement %}
+                <div class="col-md-4">
+                    <label class="form-label">Status</label>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" name="is_active" id="is_active" {% if
+                            announcement.is_active %}checked{% endif %}>
+                        <label class="form-check-label" for="is_active">Active</label>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save</button>
+                    <a href="{{ url_for('admin.announcements') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

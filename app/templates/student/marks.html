@@ -1,0 +1,47 @@
+{% extends "student/base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-trophy"></i> My Marks</h2>
+</div>
+
+{% for exam_id, data in exams.items() %}
+<div class="card mb-4">
+    <div class="card-header"><i class="bi bi-file-text"></i> {{ data.exam.name if data.exam else 'Unknown Exam' }}</div>
+    <div class="card-body p-0">
+        <table class="table table-dark table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Score</th>
+                    <th>Percentage</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in data.marks %}
+                {% set pct = (m.score_obtained / m.max_score * 100)|round(1) %}
+                <tr>
+                    <td>{{ m.subject.name }}</td>
+                    <td>{{ m.score_obtained }} / {{ m.max_score }}</td>
+                    <td>{{ pct }}%</td>
+                    <td>
+                        <span
+                            class="badge bg-{{ 'success' if pct >= 80 else 'primary' if pct >= 60 else 'warning' if pct >= 40 else 'danger' }}">
+                            {{ 'A+' if pct >= 90 else 'A' if pct >= 80 else 'B' if pct >= 70 else 'C' if pct >= 60 else
+                            'D' if pct >= 50 else 'F' }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="card-body empty-state"><i class="bi bi-trophy"></i>
+        <p>No marks available yet</p>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2><i class="bi bi-person-badge-fill"></i> Teachers</h2>
+        <p class="text-muted mb-0">Total: {{ teachers|length }} faculty members</p>
+    </div>
+    <div>
+        <a href="{{ url_for('admin.export_teachers') }}" class="btn btn-outline-light"><i class="bi bi-download"></i>
+            Export</a>
+        <a href="{{ url_for('admin.add_teacher') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add
+            Teacher</a>
+    </div>
+</div>
+
+<!-- Department Filter Tabs -->
+<ul class="nav nav-tabs mb-3" id="deptTabs">
+    <li class="nav-item"><a class="nav-link active" href="#" data-dept="all">All</a></li>
+    {% for d in departments %}
+    <li class="nav-item"><a class="nav-link" href="#" data-dept="{{ d.id }}">{{ d.name }}</a></li>
+    {% endfor %}
+</ul>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0" id="teachersTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Specialization</th>
+                        <th>Qualification</th>
+                        <th>Phone</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in teachers %}
+                    <tr data-dept="{{ t.department_id or '' }}">
+                        <td><strong>{{ t.first_name }} {{ t.last_name }}</strong></td>
+                        <td>
+                            {% if t.department %}
+                            <span class="badge bg-primary">{{ t.department.name }}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Not Assigned</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ t.specialization or '-' }}</td>
+                        <td>{{ t.qualification or '-' }}</td>
+                        <td>{{ t.phone or '-' }}</td>
+                        <td>{{ t.joining_date.strftime('%Y-%m-%d') if t.joining_date else '-' }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.edit_teacher', id=t.id) }}"
+                                class="btn btn-sm btn-outline-light"><i class="bi bi-pencil"></i></a>
+                            <form action="{{ url_for('admin.delete_teacher', id=t.id) }}" method="POST" class="d-inline"
+                                onsubmit="return confirm('Delete?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i
+                                        class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">No teachers found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('#deptTabs .nav-link').forEach(tab => {
+        tab.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelectorAll('#deptTabs .nav-link').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            const dept = this.dataset.dept;
+            document.querySelectorAll('#teachersTable tbody tr').forEach(row => {
+                if (dept === 'all' || row.dataset.dept === dept) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

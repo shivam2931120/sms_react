@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-arrow-right-circle"></i> Issue Book</h2>
+</div>
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Select Book</label>
+                    <select class="form-select" name="book_id" required>
+                        <option value="">Choose a book...</option>
+                        {% for b in books %}
+                        <option value="{{ b.id }}">{{ b.title }} ({{ b.available_copies }} available)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Select Student</label>
+                    <select class="form-select" name="student_id" required>
+                        <option value="">Choose a student...</option>
+                        {% for s in students %}
+                        <option value="{{ s.id }}">{{ s.first_name }} {{ s.last_name }} ({{ s.roll_no }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Issue Book</button>
+                    <a href="{{ url_for('admin.library') }}" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

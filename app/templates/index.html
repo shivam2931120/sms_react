@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block public_content %}
+<div class="jumbotron p-5 rounded-3 bg-light mt-4">
+    <div class="container py-5 text-center">
+        <h1 class="display-4 fw-bold">Welcome to SMS</h1>
+        <p class="lead">A comprehensive Student Management System for your institution.</p>
+        <hr class="my-4">
+        {% if not current_user.is_authenticated %}
+        <p>Please login to access your dashboard.</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('auth.login') }}" role="button">Login</a>
+        {% else %}
+        <p>You are logged in as {{ current_user.role|title }}.</p>
+        {% if current_user.role == 'admin' %}
+        <a class="btn btn-primary btn-lg" href="{{ url_for('admin.dashboard') }}" role="button">Go to Dashboard</a>
+        {% elif current_user.role == 'teacher' %}
+        <a class="btn btn-primary btn-lg" href="{{ url_for('teacher.dashboard') }}" role="button">Go to Dashboard</a>
+        {% elif current_user.role == 'student' %}
+        <a class="btn btn-primary btn-lg" href="{{ url_for('student.dashboard') }}" role="button">Go to Dashboard</a>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-grid-1x2-fill"></i> Admin Dashboard</h2>
+    <p class="text-muted">Welcome back, {{ current_user.username }}!</p>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4 col-lg-2">
+        <div class="stat-card students">
+            <div class="stat-icon"><i class="bi bi-mortarboard-fill"></i></div>
+            <div class="stat-value">{{ stats.students }}</div>
+            <div class="stat-label">Students</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2">
+        <div class="stat-card teachers">
+            <div class="stat-icon"><i class="bi bi-person-badge-fill"></i></div>
+            <div class="stat-value">{{ stats.teachers }}</div>
+            <div class="stat-label">Teachers</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2">
+        <div class="stat-card classes">
+            <div class="stat-icon"><i class="bi bi-building"></i></div>
+            <div class="stat-value">{{ stats.classes }}</div>
+            <div class="stat-label">Classes</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2">
+        <div class="stat-card subjects">
+            <div class="stat-icon"><i class="bi bi-book-fill"></i></div>
+            <div class="stat-value">{{ stats.subjects }}</div>
+            <div class="stat-label">Subjects</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2">
+        <div class="stat-card exams">
+            <div class="stat-icon"><i class="bi bi-file-earmark-text-fill"></i></div>
+            <div class="stat-value">{{ stats.exams }}</div>
+            <div class="stat-label">Exams</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2">
+        <div class="stat-card users">
+            <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-value">{{ stats.users }}</div>
+            <div class="stat-label">Users</div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row g-4 mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-graph-up"></i> Attendance (Last 7 Days)
+            </div>
+            <div class="card-body">
+                <canvas id="attendanceChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-pie-chart-fill"></i> Fee Status
+            </div>
+            <div class="card-body">
+                <canvas id="feeChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Announcements & Quick Actions -->
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-megaphone-fill"></i> Announcements</span>
+                <a href="{{ url_for('admin.add_announcement') }}" class="btn btn-sm btn-primary">+ New</a>
+            </div>
+            <div class="card-body p-0">
+                {% if announcements %}
+                <ul class="list-group list-group-flush">
+                    {% for a in announcements %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div>
+                            <span
+                                class="badge {% if a.priority == 'urgent' %}bg-danger{% elif a.priority == 'high' %}bg-warning{% else %}bg-secondary{% endif %} me-2">{{
+                                a.priority }}</span>
+                            <strong>{{ a.title }}</strong>
+                            <small class="d-block text-muted">{{ a.created_at.strftime('%b %d, %Y') }}</small>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="empty-state"><i class="bi bi-megaphone"></i>
+                    <p>No announcements</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-lightning-fill"></i> Quick Actions
+            </div>
+            <div class="card-body p-0">
+                <div class="quick-action-grid">
+                    <a href="{{ url_for('admin.add_student') }}" class="quick-action">
+                        <i class="bi bi-person-plus-fill"></i>
+                        <span>Add Student</span>
+                    </a>
+                    <a href="{{ url_for('admin.add_teacher') }}" class="quick-action">
+                        <i class="bi bi-person-badge"></i>
+                        <span>Add Teacher</span>
+                    </a>
+                    <a href="{{ url_for('admin.export_students') }}" class="quick-action">
+                        <i class="bi bi-download"></i>
+                        <span>Export Students</span>
+                    </a>
+                    <a href="{{ url_for('admin.library') }}" class="quick-action">
+                        <i class="bi bi-book"></i>
+                        <span>Library</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Attendance Chart
+    const attendanceData = {{ attendance_data | tojson }};
+    new Chart(document.getElementById('attendanceChart'), {
+        type: 'bar',
+        data: {
+            labels: attendanceData.map(d => d.date),
+            datasets: [{
+                label: 'Present',
+                data: attendanceData.map(d => d.present),
+                backgroundColor: '#00c853',
+                borderRadius: 5
+            }, {
+                label: 'Absent',
+                data: attendanceData.map(d => d.absent),
+                backgroundColor: '#E10600',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { labels: { color: '#fff' } } },
+            scales: {
+                x: { ticks: { color: '#888' }, grid: { color: '#222' } },
+                y: { ticks: { color: '#888' }, grid: { color: '#222' } }
+            }
+        }
+    });
+
+    // Fee Chart
+    const feeStats = {{ fee_stats | tojson }};
+    new Chart(document.getElementById('feeChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Paid', 'Pending', 'Overdue'],
+            datasets: [{
+                data: [feeStats.paid, feeStats.pending, feeStats.overdue],
+                backgroundColor: ['#00c853', '#ffa500', '#E10600']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { labels: { color: '#fff' } } }
+        }
+    });
+</script>
+{% endblock %}

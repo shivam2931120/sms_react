@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h2><i class="bi bi-building"></i> Classes</h2>
+        <p class="text-muted mb-0">Total: {{ classes|length }} classes</p>
+    </div>
+    <div>
+        <a href="{{ url_for('admin.export_classes') }}" class="btn btn-outline-light"><i class="bi bi-download"></i>
+            Export</a>
+        <a href="{{ url_for('admin.add_class') }}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Class</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for c in classes %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h4 class="card-title mb-0">{{ c.grade }} - {{ c.section }}</h4>
+                    {% if c.department %}
+                    <span class="badge bg-primary">{{ c.department.name }}</span>
+                    {% endif %}
+                </div>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="badge bg-dark"><i class="bi bi-people"></i> {{ c.students|length }} Students</span>
+                    {% if c.class_teacher %}
+                    <span class="badge bg-secondary"><i class="bi bi-person"></i> {{ c.class_teacher.first_name
+                        }}</span>
+                    {% endif %}
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('admin.view_timetable', class_id=c.id) }}"
+                        class="btn btn-sm btn-outline-info"><i class="bi bi-calendar-week"></i> Timetable</a>
+                    <a href="{{ url_for('admin.edit_class', id=c.id) }}" class="btn btn-sm btn-outline-light"><i
+                            class="bi bi-pencil"></i></a>
+                    <form action="{{ url_for('admin.delete_class', id=c.id) }}" method="POST" class="d-inline"
+                        onsubmit="return confirm('Delete?');"><button type="submit"
+                            class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body empty-state"><i class="bi bi-building"></i>
+                <p>No classes yet</p><a href="{{ url_for('admin.add_class') }}" class="btn btn-primary">Add First
+                    Class</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

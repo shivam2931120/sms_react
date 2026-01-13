@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-bar-chart-line"></i> Performance Analytics</h2>
+    <p class="text-muted">Student performance, grade distribution, and top performers</p>
+</div>
+
+<!-- Charts Row -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-book"></i> Subject-wise Average</div>
+            <div class="card-body">
+                <canvas id="subjectChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header"><i class="bi bi-pie-chart"></i> Grade Distribution</div>
+            <div class="card-body">
+                <canvas id="gradeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Top Students -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between">
+        <span><i class="bi bi-trophy"></i> Top 10 Performers</span>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Roll No</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Average %</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in top_students %}
+                    <tr>
+                        <td>
+                            {% if loop.index == 1 %}<span class="badge bg-warning text-dark">🥇</span>
+                            {% elif loop.index == 2 %}<span class="badge bg-secondary">🥈</span>
+                            {% elif loop.index == 3 %}<span class="badge bg-dark">🥉</span>
+                            {% else %}{{ loop.index }}{% endif %}
+                        </td>
+                        <td><code>{{ s.roll_no }}</code></td>
+                        <td><strong>{{ s.name }}</strong></td>
+                        <td>{{ s.class }}</td>
+                        <td>{{ s.average }}%</td>
+                        <td>
+                            <span
+                                class="badge bg-{{ 'success' if s.average >= 80 else 'info' if s.average >= 60 else 'warning' }}">
+                                {{ 'A+' if s.average >= 90 else 'A' if s.average >= 80 else 'B' if s.average >= 70 else
+                                'C' if s.average >= 60 else 'D' }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-3">No marks data available</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Subject chart
+    const subjectData = {{ subject_data | tojson }};
+    new Chart(document.getElementById('subjectChart'), {
+        type: 'bar',
+        data: {
+            labels: subjectData.map(d => d.name),
+            datasets: [{
+                label: 'Average %',
+                data: subjectData.map(d => d.average),
+                backgroundColor: subjectData.map(d => d.average >= 70 ? '#28a745' : d.average >= 50 ? '#ffc107' : '#dc3545')
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true, max: 100 } },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    // Grade distribution
+    const gradeData = {{ grade_dist | tojson }};
+    new Chart(document.getElementById('gradeChart'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(gradeData),
+            datasets: [{
+                data: Object.values(gradeData),
+                backgroundColor: ['#28a745', '#20c997', '#17a2b8', '#ffc107', '#fd7e14', '#dc3545']
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+</script>
+{% endblock %}

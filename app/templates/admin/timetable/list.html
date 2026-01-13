@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-header">
+    <h2><i class="bi bi-calendar-week"></i> Timetable</h2>
+    <p class="text-muted">Select a class to view or manage its timetable</p>
+</div>
+<div class="row g-4">
+    {% for c in classes %}
+    <div class="col-md-4 col-lg-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h4 class="card-title">{{ c.grade }}-{{ c.section }}</h4>
+                <p class="text-muted">{{ c.students|length }} Students</p>
+                <a href="{{ url_for('admin.view_timetable', class_id=c.id) }}" class="btn btn-primary btn-sm">View
+                    Timetable</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body empty-state">
+                <i class="bi bi-calendar-x"></i>
+                <p>No classes found. Create classes first.</p>
+                <a href="{{ url_for('admin.add_class') }}" class="btn btn-primary">Add Class</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
