@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models import User
 from app import db
+from sqlalchemy import or_
 
 auth = Blueprint('auth', __name__)
 
@@ -17,29 +18,33 @@ def login():
         return redirect(url_for('main.index'))
 
     if request.method == 'POST':
-        login_input = request.form.get('email')  # Can be email OR username
-        password = request.form.get('password')
+        login_input = request.form.get('email', '').strip()
+        password = request.form.get('password', '')
         
-        # Allow login with email OR username
-        user = User.query.filter(
-            (User.email == login_input) | (User.username == login_input)
-        ).first()
-        
-        if user and user.check_password(password):
-            login_user(user)
-            flash('Login successful!', 'success')
+        try:
+            # Allow login with email OR username
+            user = User.query.filter(
+                or_(User.email == login_input, User.username == login_input)
+            ).first()
             
-            # Redirect based on role
-            if user.role == 'admin':
-                return redirect(url_for('admin.dashboard'))
-            elif user.role == 'teacher':
-                return redirect(url_for('teacher.dashboard'))
-            elif user.role == 'student':
-                return redirect(url_for('student.dashboard'))
-            
-            return redirect(url_for('main.index'))
-        else:
-            flash('Login failed. Please check username/email and password.', 'danger')
+            if user and user.check_password(password):
+                login_user(user)
+                flash('Login successful!', 'success')
+                
+                # Redirect based on role
+                if user.role == 'admin':
+                    return redirect(url_for('admin.dashboard'))
+                elif user.role == 'teacher':
+                    return redirect(url_for('teacher.dashboard'))
+                elif user.role == 'student':
+                    return redirect(url_for('student.dashboard'))
+                
+                return redirect(url_for('main.index'))
+            else:
+                flash('Login failed. Please check username/email and password.', 'danger')
+        except Exception as e:
+            flash(f'Database error. Please try again.', 'danger')
+            print(f"Login error: {e}")
             
     return render_template('auth/login.html')
 
