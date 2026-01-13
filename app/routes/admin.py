@@ -25,40 +25,70 @@ def admin_required(f):
 @login_required
 @admin_required
 def dashboard():
-    stats = {
-        'students': Student.query.count(),
-        'teachers': Teacher.query.count(),
-        'classes': Class.query.count(),
-        'subjects': Subject.query.count(),
-        'exams': Exam.query.count(),
-        'users': User.query.count()
-    }
-    recent_students = Student.query.order_by(Student.id.desc()).limit(5).all()
-    announcements = Announcement.query.filter_by(is_active=True).order_by(Announcement.created_at.desc()).limit(5).all()
-    
-    # Chart data
-    fee_stats = {
-        'paid': Fee.query.filter_by(status='Paid').count(),
-        'pending': Fee.query.filter_by(status='Pending').count(),
-        'overdue': Fee.query.filter_by(status='Overdue').count()
-    }
-    
-    # Attendance last 7 days
-    from datetime import date, timedelta
-    today = date.today()
-    attendance_data = []
-    for i in range(6, -1, -1):
-        d = today - timedelta(days=i)
-        present = Attendance.query.filter_by(date=d, status='Present').count()
-        absent = Attendance.query.filter_by(date=d, status='Absent').count()
-        attendance_data.append({'date': d.strftime('%a'), 'present': present, 'absent': absent})
-    
-    return render_template('admin/dashboard.html', 
-                           stats=stats, 
-                           recent_students=recent_students,
-                           announcements=announcements,
-                           fee_stats=fee_stats,
-                           attendance_data=attendance_data)
+    try:
+        stats = {
+            'students': Student.query.count(),
+            'teachers': Teacher.query.count(),
+            'classes': Class.query.count(),
+            'subjects': Subject.query.count(),
+            'exams': Exam.query.count(),
+            'users': User.query.count()
+        }
+        
+        # Wrap list queries in try-except to catch table missing errors
+        try:
+            recent_students = Student.query.order_by(Student.id.desc()).limit(5).all()
+        except Exception as e:
+            current_app.logger.error(f"Error fetching recent students: {e}")
+            recent_students = []
+
+        try:
+            announcements = Announcement.query.filter_by(is_active=True).order_by(Announcement.created_at.desc()).limit(5).all()
+        except Exception as e:
+            current_app.logger.error(f"Error fetching announcements: {e}")
+            announcements = []
+        
+        # Chart data
+        try:
+            fee_stats = {
+                'paid': Fee.query.filter_by(status='Paid').count(),
+                'pending': Fee.query.filter_by(status='Pending').count(),
+                'overdue': Fee.query.filter_by(status='Overdue').count()
+            }
+        except Exception as e:
+            current_app.logger.error(f"Error fetching fee stats: {e}")
+            fee_stats = {'paid': 0, 'pending': 0, 'overdue': 0}
+        
+        # Attendance last 7 days
+        try:
+            from datetime import date, timedelta
+            today = date.today()
+            attendance_data = []
+            for i in range(6, -1, -1):
+                d = today - timedelta(days=i)
+                present = Attendance.query.filter_by(date=d, status='Present').count()
+                absent = Attendance.query.filter_by(date=d, status='Absent').count()
+                attendance_data.append({'date': d.strftime('%a'), 'present': present, 'absent': absent})
+        except Exception as e:
+             current_app.logger.error(f"Error fetching attendance: {e}")
+             attendance_data = []
+        
+        return render_template('admin/dashboard.html', 
+                               stats=stats, 
+                               recent_students=recent_students,
+                               announcements=announcements,
+                               fee_stats=fee_stats,
+                               attendance_data=attendance_data)
+                               
+    except Exception as e:
+        current_app.logger.error(f"Dashboard Fatal Error: {e}")
+        flash(f"Error loading dashboard stats: {str(e)}", "danger")
+        return render_template('admin/dashboard.html', 
+                               stats={'students':0, 'teachers':0, 'classes':0, 'subjects':0, 'exams':0, 'users':0}, 
+                               recent_students=[],
+                               announcements=[],
+                               fee_stats={'paid':0,'pending':0,'overdue':0},
+                               attendance_data=[])
 
 # ============================================
 # STUDENTS CRUD
