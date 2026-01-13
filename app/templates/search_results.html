@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col">
+        <h2 class="h4 mb-1">Search Results</h2>
+        <p class="text-muted mb-0">
+            Found {{ students|length + teachers|length + users|length }} results for "<strong>{{ query }}</strong>"
+        </p>
+    </div>
+</div>
+
+{% if not students and not teachers and not users %}
+<div class="card text-center py-5">
+    <div class="card-body">
+        <div class="display-1 text-muted opacity-25 mb-3">
+            <i class="bi bi-search"></i>
+        </div>
+        <h5 class="text-muted">No results found</h5>
+        <p class="text-muted">Try checking your spelling or using a different keyword.</p>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary mt-2">Back to Dashboard</a>
+    </div>
+</div>
+{% endif %}
+
+<!-- Students Section -->
+{% if students %}
+<div class="card mb-4">
+    <div class="card-header bg-transparent border-bottom">
+        <h5 class="mb-0"><i class="bi bi-mortarboard-fill me-2 text-primary"></i> Students ({{ students|length }})</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Roll No</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3"
+                                style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <span class="fw-bold">{{ student.first_name[0] }}{{ student.last_name[0] }}</span>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{ student.first_name }} {{ student.last_name }}</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ student.roll_no }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                        <!-- Add edit/delete if needed -->
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Teachers Section -->
+{% if teachers %}
+<div class="card mb-4">
+    <div class="card-header bg-transparent border-bottom">
+        <h5 class="mb-0"><i class="bi bi-person-badge-fill me-2 text-info"></i> Teachers ({{ teachers|length }})</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Specialization</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in teachers %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar bg-info bg-opacity-10 text-info rounded-circle p-2 me-3"
+                                style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                <span class="fw-bold">{{ teacher.first_name[0] }}{{ teacher.last_name[0] }}</span>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{ teacher.first_name }} {{ teacher.last_name }}</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ teacher.specialization }}</td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Users Section -->
+{% if users %}
+<div class="card mb-4">
+    <div class="card-header bg-transparent border-bottom">
+        <h5 class="mb-0"><i class="bi bi-people-fill me-2 text-warning"></i> Users ({{ users|length }})</h5>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>
+                        <span class="fw-bold">{{ user.username }}</span>
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <span class="badge bg-secondary bg-opacity-10 text-secondary">{{ user.role|upper }}</span>
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

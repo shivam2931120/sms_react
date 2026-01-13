@@ -162,6 +162,17 @@
                 <button type="button" id="sidebarToggle" class="btn">
                     <i class="bi bi-list"></i>
                 </button>
+
+                <!-- Search Bar -->
+                <form class="d-none d-md-flex ms-4" action="{{ url_for('main.search') }}" method="GET"
+                    style="flex: 1; max-width: 400px;">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 text-muted"><i
+                                class="bi bi-search"></i></span>
+                        <input class="form-control bg-light border-start-0 ps-0" type="search" name="q"
+                            placeholder="Search..." aria-label="Search">
+                    </div>
+                </form>
                 <div class="header-right">
                     <span class="user-info">
                         <i class="bi bi-person-circle"></i> {{ current_user.username }}
