@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from config import Config
+import os
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -14,6 +15,9 @@ migrate = Migrate()
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    
+    # Disable strict slashes
+    app.url_map.strict_slashes = False
 
     # Initialize extensions with app
     db.init_app(app)
@@ -40,11 +44,15 @@ def create_app(config_class=Config):
     # Import models to ensure they are registered with SQLAlchemy
     from app import models
     
-    # Create tables if they don't exist (for serverless/production)
-    with app.app_context():
-        try:
-            db.create_all()
-        except Exception as e:
-            app.logger.warning(f"Could not create tables: {e}")
+    # Create tables if DATABASE_URL is set (production)
+    # Skip if running on Vercel cold start without proper DB
+    if os.environ.get('DATABASE_URL') or os.environ.get('SUPABASE_DB_URL'):
+        with app.app_context():
+            try:
+                db.create_all()
+                app.logger.info("Database tables created/verified")
+            except Exception as e:
+                app.logger.error(f"Database setup error: {e}")
+                # Don't crash - let the app handle individual route errors
     
     return app
