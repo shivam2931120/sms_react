@@ -1,6 +1,6 @@
 /* ============================================
-   OFFICIAL SMS THEME - Enterprise Light
-   Professional, Clean, Trustworthy
+   OFFICIAL SMS THEME - Enterprise Dark
+   Professional, Sleek, Dark Mode
    ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap');
@@ -10,39 +10,43 @@
    ============================================ */
 :root {
     /* Backgrounds */
-    --bg-body: #F4F6F8;
-    --bg-card: #FFFFFF;
-    --bg-sidebar: #FFFFFF;
-    --bg-header: rgba(255, 255, 255, 0.9);
-    --bg-input: #F9FAFB;
-    
+    --bg-body: #161C24;
+    --bg-paper: #212B36;
+    --bg-card: #212B36;
+    --bg-sidebar: #161C24;
+    --bg-header: rgba(22, 28, 36, 0.9);
+    --bg-input: #919EAB14;
+    /* 12% opacity */
+    --bg-neutral: #919EAB29;
+    /* 16% opacity */
+
     /* Brand Colors */
-    --primary: #2065D1;
-    --primary-dark: #103996;
-    --primary-light: #76B0F1;
-    --primary-lighter: #D1E9FC;
-    --primary-glow: rgba(32, 101, 209, 0.2);
+    --primary: #3366FF;
+    --primary-dark: #1939B7;
+    --primary-light: #5480FF;
+    --primary-lighter: #84A9FF;
+    --primary-glow: rgba(51, 102, 255, 0.24);
 
     /* Text Colors */
-    --text-primary: #212B36;
-    --text-secondary: #637381;
-    --text-disabled: #919EAB;
-    
+    --text-primary: #FFFFFF;
+    --text-secondary: #919EAB;
+    --text-disabled: #637381;
+
     /* Borders & Shadows */
-    --border-color: #E0E0E0;
-    --sidebar-border: dashed 1px rgba(145, 158, 171, 0.24);
-    --card-shadow: 0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12);
-    --header-shadow: 0 8px 16px 0 rgba(145, 158, 171, 0.16);
-    
+    --border-color: rgba(145, 158, 171, 0.24);
+    --sidebar-border: 1px dashed rgba(145, 158, 171, 0.24);
+    --card-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2), 0 12px 24px -4px rgba(0, 0, 0, 0.12);
+    --header-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.24);
+
     /* State Colors */
     --success: #36B37E;
     --warning: #FFAB00;
     --danger: #FF5630;
     --info: #00B8D9;
-    
+
     /* Typography */
     --font-family: 'Public Sans', sans-serif;
-    
+
     /* Dimensions */
     --sidebar-width: 280px;
     --sidebar-collapsed: 88px;
@@ -58,9 +62,15 @@ body {
     color: var(--text-primary);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-weight: 700;
     margin-bottom: 0.5rem;
     color: var(--text-primary);
@@ -73,11 +83,15 @@ a {
 }
 
 a:hover {
-    color: var(--primary-dark);
+    color: var(--primary-light);
 }
 
 .text-muted {
     color: var(--text-secondary) !important;
+}
+
+.text-dark {
+    color: var(--text-primary) !important;
 }
 
 /* ============================================
@@ -89,7 +103,7 @@ a:hover {
 }
 
 /* ============================================
-   Sidebar (Professional Light)
+   Sidebar (Fixed & Static)
    ============================================ */
 .sidebar {
     width: var(--sidebar-width);
@@ -103,7 +117,13 @@ a:hover {
     display: flex;
     flex-direction: column;
     z-index: 1000;
-    transition: all 0.3s ease;
+    /* Hide scrollbar but keep functionality */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none;
 }
 
 .sidebar.collapsed {
@@ -116,6 +136,7 @@ a:hover {
     display: flex;
     align-items: center;
     gap: 1rem;
+    border-bottom: 1px dashed var(--border-color);
 }
 
 .sidebar-header h3 {
@@ -128,8 +149,8 @@ a:hover {
 }
 
 .role-badge {
-    background: var(--primary-lighter);
-    color: var(--primary-dark);
+    background: rgba(51, 102, 255, 0.16);
+    color: var(--primary-light);
     padding: 2px 8px;
     border-radius: 6px;
     font-size: 0.75rem;
@@ -140,41 +161,55 @@ a:hover {
 /* Navigation */
 .sidebar-nav {
     list-style: none;
-    padding: 0 1rem;
-    margin: 1rem 0;
+    padding: 1rem;
+    margin: 0;
     flex: 1;
     overflow-y: auto;
+    /* Hide inner scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+    display: none;
 }
 
 .sidebar-nav .nav-section {
-    padding: 1rem 1rem 0.5rem;
+    padding: 1rem 0.5rem 0.5rem;
     font-size: 0.7rem;
     font-weight: 700;
-    color: var(--text-secondary);
+    color: var(--text-disabled);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    margin-top: 0.5rem;
 }
 
 .sidebar-nav a {
     display: flex;
     align-items: center;
-    padding: 0.8rem 1rem;
+    padding: 0.75rem 1rem;
     color: var(--text-secondary);
     font-size: 0.875rem;
     font-weight: 500;
     border-radius: 8px;
     margin-bottom: 0.25rem;
+    transition: all 0.2s ease;
 }
 
 .sidebar-nav a:hover {
-    background-color: var(--bg-body);
+    background-color: rgba(145, 158, 171, 0.08);
     color: var(--text-primary);
 }
 
 .sidebar-nav a.active {
-    background-color: var(--primary-lighter);
-    color: var(--primary);
+    background-color: rgba(51, 102, 255, 0.08);
+    /* Transparent Primary */
+    color: var(--primary-light);
     font-weight: 600;
+}
+
+.sidebar-nav a.active i {
+    color: var(--primary);
 }
 
 .sidebar-nav a i {
@@ -182,12 +217,18 @@ a:hover {
     font-size: 1.25rem;
     width: 24px;
     text-align: center;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+}
+
+.sidebar-nav a:hover i {
+    color: var(--text-primary);
 }
 
 /* Sidebar Footer */
 .sidebar-footer {
     padding: 1rem;
-    border-top: var(--sidebar-border);
+    border-top: 1px dashed var(--border-color);
 }
 
 .logout-btn {
@@ -200,11 +241,12 @@ a:hover {
     border-radius: 8px;
     font-weight: 600;
     font-size: 0.875rem;
+    transition: all 0.2s;
 }
 
 .logout-btn:hover {
     background: rgba(255, 86, 48, 0.16);
-    color: #B71D18;
+    color: #FF5630;
     text-decoration: none;
 }
 
@@ -216,16 +258,20 @@ a:hover {
 .sidebar.collapsed .logout-btn span {
     display: none;
 }
+
 .sidebar.collapsed .sidebar-header {
     justify-content: center;
 }
+
 .sidebar.collapsed .sidebar-nav {
-    padding: 0 0.5rem;
+    padding: 1rem 0.5rem;
 }
+
 .sidebar.collapsed a {
     justify-content: center;
-    padding: 0.8rem 0;
+    padding: 0.75rem 0;
 }
+
 .sidebar.collapsed a i {
     margin: 0;
 }
@@ -248,7 +294,7 @@ a:hover {
 /* Top Header */
 .top-header {
     height: var(--header-height);
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(22, 28, 36, 0.8);
     backdrop-filter: blur(6px);
     border-bottom: 1px solid transparent;
     display: flex;
@@ -282,9 +328,10 @@ a:hover {
     gap: 0.75rem;
     font-weight: 600;
     color: var(--text-primary);
-    background: rgba(145, 158, 171, 0.12);
+    background: rgba(145, 158, 171, 0.08);
     padding: 0.5rem 1rem;
     border-radius: 24px;
+    border: 1px solid var(--border-color);
 }
 
 .user-info i {
@@ -303,19 +350,20 @@ a:hover {
    ============================================ */
 .card {
     background: var(--bg-card);
-    border: none;
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     box-shadow: var(--card-shadow);
-    transition: box-shadow 0.3s ease;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .card:hover {
-    box-shadow: 0 16px 32px -4px rgba(145, 158, 171, 0.24);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.4);
 }
 
 .card-header {
     background: transparent;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px dashed var(--border-color);
     padding: 1.5rem;
     font-weight: 700;
     font-size: 1.1rem;
@@ -326,9 +374,9 @@ a:hover {
     padding: 1.5rem;
 }
 
-/* Official Stat Card */
 .stat-card {
     background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: 1.5rem;
     box-shadow: var(--card-shadow);
@@ -341,7 +389,8 @@ a:hover {
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+    border-color: var(--primary);
 }
 
 .stat-icon-wrapper {
@@ -355,22 +404,25 @@ a:hover {
     flex-shrink: 0;
 }
 
-/* Specific Colors for Stats */
+/* Dark Mode Stat Colors - Lighter backgrounds for contrast */
 .stat-card.students .stat-icon-wrapper {
-    background: var(--primary-lighter);
-    color: var(--primary);
+    background: rgba(51, 102, 255, 0.16);
+    color: var(--primary-light);
 }
+
 .stat-card.teachers .stat-icon-wrapper {
-    background: #E0F2F1;
-    color: #009688;
+    background: rgba(0, 184, 217, 0.16);
+    color: #00B8D9;
 }
+
 .stat-card.classes .stat-icon-wrapper {
-    background: #FFF8E1;
-    color: #FFC107;
+    background: rgba(255, 171, 0, 0.16);
+    color: #FFAB00;
 }
+
 .stat-card.fees .stat-icon-wrapper {
-    background: #E8F5E9;
-    color: #4CAF50;
+    background: rgba(54, 179, 126, 0.16);
+    color: #36B37E;
 }
 
 .stat-content h3 {
@@ -392,10 +444,12 @@ a:hover {
 .table {
     margin-bottom: 0;
     vertical-align: middle;
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text-secondary);
 }
 
 .table thead th {
-    background-color: #F4F6F8;
+    background-color: rgba(145, 158, 171, 0.16);
     color: var(--text-secondary);
     font-weight: 600;
     text-transform: uppercase;
@@ -403,6 +457,9 @@ a:hover {
     letter-spacing: 0.05em;
     border-bottom: none;
     padding: 1rem;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    /* For rounded corners on first/last th if needed */
 }
 
 .table tbody td {
@@ -413,24 +470,44 @@ a:hover {
 }
 
 .table-hover tbody tr:hover {
-    background-color: #F9FAFB;
+    background-color: rgba(145, 158, 171, 0.08);
+    /* Dark hover */
+}
+
+.list-group-item {
+    background-color: transparent;
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.list-group-item:hover {
+    background-color: rgba(145, 158, 171, 0.08);
 }
 
 /* ============================================
    Forms & Buttons
    ============================================ */
-.form-control, .form-select {
-    background-color: var(--bg-input);
-    border: 1px solid rgba(145, 158, 171, 0.32);
+.form-control,
+.form-select {
+    background-color: var(--bg-neutral);
+    border: 1px solid transparent;
     border-radius: 8px;
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
+    color: var(--text-primary);
+    transition: all 0.2s;
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
+    background-color: rgba(145, 158, 171, 0.16);
     border-color: var(--text-primary);
     box-shadow: none;
-    background-color: #FFF;
+    color: var(--text-primary);
+}
+
+.form-control::placeholder {
+    color: var(--text-disabled);
 }
 
 .btn {
@@ -438,24 +515,31 @@ a:hover {
     padding: 0.6rem 1.25rem;
     border-radius: 8px;
     text-transform: none;
+    border: none;
 }
 
 .btn-primary {
     background-color: var(--primary);
-    border-color: var(--primary);
-    box-shadow: 0 8px 16px 0 rgba(32, 101, 209, 0.24);
+    box-shadow: 0 8px 16px 0 rgba(51, 102, 255, 0.24);
+    color: #FFF;
 }
 
 .btn-primary:hover {
     background-color: var(--primary-dark);
-    border-color: var(--primary-dark);
+}
+
+/* Inputs and Groups */
+.input-group-text {
+    background-color: var(--bg-neutral);
+    border: none;
+    color: var(--text-secondary);
 }
 
 /* ============================================
    Login Page Specific
    ============================================ */
 .login-page {
-    background: linear-gradient(135deg, white 0%, #F4F6F8 100%);
+    background: var(--bg-body);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -463,31 +547,8 @@ a:hover {
 }
 
 .login-card {
-    background: #FFF;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
     border-radius: 24px;
-    box-shadow: 0 0 2px 0 rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12);
-    overflow: hidden;
-    max-width: 480px;
-    width: 100%;
-}
-
-.login-header {
-    text-align: center;
-    padding: 2rem 2rem 1rem;
-}
-
-.login-header h3 {
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.login-body {
-    padding: 2rem;
-}
-
-/* Responsive */
-@media (max-width: 992px) {
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.show { transform: translateX(0); }
-    #content { margin-left: 0; }
+    box-shadow: var(--card-shadow);
 }

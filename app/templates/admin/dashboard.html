@@ -213,9 +213,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Global defaults for Chart.js
+    // Global defaults for Chart.js - Dark Mode
     Chart.defaults.font.family = "'Public Sans', sans-serif";
-    Chart.defaults.color = '#637381';
+    Chart.defaults.color = '#919EAB';
+    Chart.defaults.borderColor = 'rgba(145, 158, 171, 0.24)';
 
     // Attendance Chart
     const attendanceData = {{ attendance_data | tojson }};
@@ -245,7 +246,7 @@
             },
             scales: {
                 x: { grid: { display: false } },
-                y: { grid: { borderDash: [4, 4] }, beginAtZero: true }
+                y: { grid: { borderDash: [4, 4], color: 'rgba(145, 158, 171, 0.24)' }, beginAtZero: true }
             }
         }
     });
