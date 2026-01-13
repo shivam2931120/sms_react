@@ -17,10 +17,13 @@ def login():
         return redirect(url_for('main.index'))
 
     if request.method == 'POST':
-        email = request.form.get('email')
+        login_input = request.form.get('email')  # Can be email OR username
         password = request.form.get('password')
         
-        user = User.query.filter_by(email=email).first()
+        # Allow login with email OR username
+        user = User.query.filter(
+            (User.email == login_input) | (User.username == login_input)
+        ).first()
         
         if user and user.check_password(password):
             login_user(user)
@@ -36,7 +39,7 @@ def login():
             
             return redirect(url_for('main.index'))
         else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
+            flash('Login failed. Please check username/email and password.', 'danger')
             
     return render_template('auth/login.html')
 
