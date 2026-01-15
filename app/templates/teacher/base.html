@@ -16,6 +16,9 @@
             <div class="sidebar-header">
                 <h3><span style="color: #E10600;">◆</span> Shikshan</h3>
                 <span class="role-badge">Teacher</span>
+                <button type="button" class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
             <ul class="sidebar-nav">
                 <li class="nav-section">MAIN</li>
@@ -88,6 +91,7 @@
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const sidebarClose = document.getElementById('sidebarClose');
 
         function openMobileSidebar() {
             sidebar?.classList.add('mobile-open');
@@ -111,6 +115,7 @@
         });
 
         sidebarOverlay?.addEventListener('click', closeMobileSidebar);
+        sidebarClose?.addEventListener('click', closeMobileSidebar);
 
         document.querySelectorAll('.sidebar-nav a').forEach(link => {
             link.addEventListener('click', () => window.innerWidth < 992 && closeMobileSidebar());

@@ -1393,3 +1393,217 @@ a:focus-visible {
 .border-accent {
     border-color: var(--accent) !important;
 }
+
+/* ============================================
+   ENHANCED MOBILE STYLES
+   ============================================ */
+
+/* Mobile Header Improvements */
+@media (max-width: 991.98px) {
+    .top-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        background: var(--bg-secondary);
+        border-bottom: 1px solid var(--border);
+    }
+
+    /* Show mobile brand in header */
+    .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .mobile-brand .accent {
+        color: var(--accent);
+    }
+
+    /* Hamburger Menu Animation */
+    #sidebarToggle {
+        width: 44px;
+        height: 44px;
+        font-size: 1.5rem;
+        border-radius: var(--radius-md);
+    }
+    
+    #sidebarToggle:active {
+        transform: scale(0.95);
+        background: rgba(225, 6, 0, 0.15);
+    }
+
+    /* Sidebar improvements for mobile */
+    .sidebar {
+        width: 280px;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar.mobile-open {
+        left: 0;
+    }
+
+    /* Sidebar header on mobile */
+    .sidebar-header {
+        padding: 1.25rem 1.5rem;
+        padding-right: 3.5rem;
+    }
+
+    .sidebar-close {
+        width: 36px;
+        height: 36px;
+        font-size: 1.1rem;
+        background: rgba(225, 6, 0, 0.15);
+        color: var(--accent);
+    }
+
+    .sidebar-close:active {
+        transform: scale(0.9);
+    }
+
+    /* Touch-friendly nav items */
+    .sidebar-nav a {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar-nav a i {
+        font-size: 1.1rem;
+    }
+
+    /* Sidebar footer spacing */
+    .sidebar-footer {
+        padding: 1rem 1.5rem;
+    }
+
+    .sidebar-footer a {
+        padding: 0.75rem 0;
+        min-height: 44px;
+    }
+}
+
+/* Touch-friendly buttons and inputs */
+@media (max-width: 991.98px) {
+    .btn {
+        min-height: 44px;
+        padding: 0.625rem 1rem;
+    }
+
+    .btn-sm {
+        min-height: 36px;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 44px;
+        font-size: 16px; /* Prevents iOS zoom on focus */
+    }
+
+    /* Card improvements */
+    .card {
+        border-radius: var(--radius-md);
+    }
+
+    .card-header {
+        padding: 0.875rem 1rem;
+    }
+
+    /* Table touch improvements */
+    .table td,
+    .table th {
+        padding: 0.75rem 0.5rem;
+        white-space: nowrap;
+    }
+
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Action buttons in tables */
+    .table .btn {
+        min-height: 36px;
+        padding: 0.375rem 0.5rem;
+    }
+}
+
+/* Extra small screens (phones) */
+@media (max-width: 480px) {
+    .main-content {
+        padding: 0.75rem !important;
+    }
+
+    /* Page titles */
+    .h4, h4 {
+        font-size: 1.1rem;
+    }
+
+    /* Stat cards compact */
+    .stat-card {
+        padding: 0.875rem;
+    }
+
+    .stat-card h3 {
+        font-size: 1.35rem;
+    }
+
+    .stat-card .stat-icon-wrapper {
+        width: 40px;
+        height: 40px;
+    }
+
+    .stat-card .stat-icon-wrapper i {
+        font-size: 1rem;
+    }
+
+    /* Compact card headers */
+    .card-header {
+        font-size: 0.9rem;
+        padding: 0.75rem 1rem;
+    }
+
+    /* Form labels */
+    .form-label {
+        font-size: 0.75rem;
+    }
+}
+
+/* Safe area for mobile (notch support) */
+@supports (padding-top: env(safe-area-inset-top)) {
+    .top-header {
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .sidebar {
+        padding-top: env(safe-area-inset-top);
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Prevent text selection on interactive elements */
+.sidebar-nav a,
+.btn,
+.sidebar-close,
+#sidebarToggle {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Active states for touch */
+.sidebar-nav a:active,
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* Pull-to-refresh prevention */
+body {
+    overscroll-behavior-y: contain;
+}
