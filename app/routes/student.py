@@ -103,14 +103,14 @@ def fees():
 @student_required
 def timetable():
     student = Student.query.filter_by(user_id=current_user.id).first()
-    timetable = TimeTable.query.filter_by(class_id=student.class_id).order_by(TimeTable.day, TimeTable.start_time).all()
+    timetable = TimeTable.query.filter_by(class_id=student.class_id).order_by(TimeTable.day_of_week, TimeTable.start_time).all()
     
     # Group by day
     days = {}
     for t in timetable:
-        if t.day not in days:
-            days[t.day] = []
-        days[t.day].append(t)
+        if t.day_of_week not in days:
+            days[t.day_of_week] = []
+        days[t.day_of_week].append(t)
     
     return render_template('student/timetable.html', student=student, days=days)
 

@@ -538,14 +538,7 @@ def users():
     users = User.query.all()
     return render_template('admin/users/list.html', users=users)
 
-# ============================================
-# SETTINGS
-# ============================================
-@admin.route('/settings')
-@login_required
-@admin_required
-def settings():
-    return render_template('admin/settings.html')
+
 
 # ============================================
 # ANNOUNCEMENTS

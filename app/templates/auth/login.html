@@ -1,26 +1,35 @@
 {% extends "base.html" %}
 
 {% block public_content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6 col-lg-4">
-        <div class="card shadow">
-            <div class="card-body">
-                <h3 class="text-center mb-4">Login</h3>
-                <form method="POST" action="">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                    </div>
-                </form>
-            </div>
+<div class="login-card">
+    <img src="{{ url_for('static', filename='img/shikshan.png') }}" alt="Shikshan" class="login-logo">
+    <h1 class="login-title">Welcome Back</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} mb-4">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="">
+        <div class="mb-4">
+            <label for="login_id" class="form-label">Email or Username</label>
+            <input type="text" class="form-control" id="login_id" name="login_id" required
+                placeholder="Enter your email or username">
         </div>
-    </div>
+        <div class="mb-4">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required
+                placeholder="Enter your password">
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
+        </div>
+        <div class="text-center mt-3">
+            <a href="#" class="text-secondary small">Forgot Password?</a>
+        </div>
+    </form>
 </div>
 {% endblock %}

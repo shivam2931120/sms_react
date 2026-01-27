@@ -148,12 +148,12 @@
             datasets: [{
                 label: 'Present',
                 data: attendanceData.map(d => d.present),
-                backgroundColor: '#00c853',
+                backgroundColor: '#ffffff',
                 borderRadius: 5
             }, {
                 label: 'Absent',
                 data: attendanceData.map(d => d.absent),
-                backgroundColor: '#E10600',
+                backgroundColor: '#333333',
                 borderRadius: 5
             }]
         },
@@ -175,7 +175,7 @@
             labels: ['Paid', 'Pending', 'Overdue'],
             datasets: [{
                 data: [feeStats.paid, feeStats.pending, feeStats.overdue],
-                backgroundColor: ['#00c853', '#ffa500', '#E10600']
+                backgroundColor: ['#ffffff', '#666666', '#333333']
             }]
         },
         options: {

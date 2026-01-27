@@ -17,10 +17,10 @@ def login():
         return redirect(url_for('main.index'))
 
     if request.method == 'POST':
-        email = request.form.get('email')
+        login_id = request.form.get('login_id')
         password = request.form.get('password')
         
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter((User.email == login_id) | (User.username == login_id)).first()
         
         if user and user.check_password(password):
             login_user(user)
