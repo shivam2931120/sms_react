@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shikshan - Education Management Platform</title>
+    <title>Shikshan</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/shikshan.png') }}">
     <!-- Bootstrap CSS -->
@@ -112,6 +112,10 @@
                 <li><a href="{{ url_for('admin.permissions') }}"
                         class="{% if 'permissions' in request.endpoint %}active{% endif %}">
                         <i class="bi bi-shield-lock"></i> Permissions
+                    </a></li>
+                <li><a href="{{ url_for('admin.approvals') }}"
+                        class="{% if 'approvals' in request.endpoint %}active{% endif %}">
+                        <i class="bi bi-check-circle-fill"></i> Approvals
                     </a></li>
 
 

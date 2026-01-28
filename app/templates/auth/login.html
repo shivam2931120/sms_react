@@ -28,7 +28,9 @@
             <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
         </div>
         <div class="text-center mt-3">
-            <a href="#" class="text-secondary small">Forgot Password?</a>
+            <a href="{{ url_for('auth.register') }}" class="text-primary small fw-bold me-2">Create Account</a>
+            <span class="text-secondary small">|</span>
+            <a href="#" class="text-secondary small ms-2">Forgot Password?</a>
         </div>
     </form>
 </div>

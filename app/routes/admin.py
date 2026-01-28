@@ -81,7 +81,8 @@ def add_student():
         user = User(
             username=request.form['username'],
             email=request.form['email'],
-            role='student'
+            role='student',
+            is_approved=True
         )
         user.set_password(request.form['password'])
         db.session.add(user)
@@ -198,7 +199,8 @@ def add_teacher():
         user = User(
             username=request.form['username'],
             email=request.form['email'],
-            role='teacher'
+            role='teacher',
+            is_approved=True
         )
         user.set_password(request.form['password'])
         db.session.add(user)
@@ -537,6 +539,46 @@ def export_fees():
 def users():
     users = User.query.all()
     return render_template('admin/users/list.html', users=users)
+
+@admin.route('/users/approvals')
+@login_required
+@admin_required
+def approvals():
+    pending_users = User.query.filter_by(is_approved=False).all()
+    return render_template('admin/users/approvals.html', pending_users=pending_users)
+
+@admin.route('/users/approve/<int:id>', methods=['POST'])
+@login_required
+@admin_required
+def approve_user(id):
+    user = User.query.get_or_404(id)
+    user.is_approved = True
+    db.session.commit()
+    
+    # Send email notification placeholder
+    # send_approval_email(user.email)
+    
+    flash(f'User {user.username} approved successfully!', 'success')
+    return redirect(url_for('admin.approvals'))
+
+@admin.route('/users/reject/<int:id>', methods=['POST'])
+@login_required
+@admin_required
+def reject_user(id):
+    user = User.query.get_or_404(id)
+    
+    # Cleanup profile data
+    if user.role == 'student':
+        student = Student.query.filter_by(user_id=user.id).first()
+        if student: db.session.delete(student)
+    elif user.role == 'teacher':
+        teacher = Teacher.query.filter_by(user_id=user.id).first()
+        if teacher: db.session.delete(teacher)
+        
+    db.session.delete(user)
+    db.session.commit()
+    flash(f'User {user.username} rejected and removed.', 'warning')
+    return redirect(url_for('admin.approvals'))
 
 
 

@@ -2,8 +2,14 @@
 {% block content %}
 <div class="page-header">
     <h2>Welcome, {{ student.first_name }}!</h2>
-    <p class="text-muted">{{ student.enrolled_class.grade }}-{{ student.enrolled_class.section if student.enrolled_class
-        }} | Roll No: {{ student.roll_no }}</p>
+    <p class="text-muted">
+        {% if student.enrolled_class %}
+        {{ student.enrolled_class.grade }}-{{ student.enrolled_class.section }}
+        {% else %}
+        Class Not Assigned
+        {% endif %}
+        | Roll No: {{ student.roll_no }}
+    </p>
 </div>
 
 <!-- Quick Stats -->

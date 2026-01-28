@@ -29,6 +29,12 @@ class Config:
 
     SQLALCHEMY_DATABASE_URI = database_url or 'sqlite:///site.db'
     
+    # Supabase Connection Pooling Recommendation:
+    # Use the **Session Pooler (Port 5432)** for this application.
+    # Why? Flask-SQLAlchemy manages sessions and transaction states that may break with Transaction Pooling (Port 6543)
+    # properly unless you disable prepared statements and manage transactions manually.
+    # The Session Pooler works like a direct connection but multiplexes the underlying connections, which is safer here.
+    
     # Supabase Session Pooler Optimizations
     if SQLALCHEMY_DATABASE_URI and 'postgresql' in SQLALCHEMY_DATABASE_URI:
         if 'sslmode' not in SQLALCHEMY_DATABASE_URI:

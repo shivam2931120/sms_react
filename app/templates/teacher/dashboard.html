@@ -65,7 +65,13 @@
                         <tr>
                             <td>{{ t.start_time.strftime('%H:%M') if t.start_time else '' }}</td>
                             <td><strong>{{ t.subject.name if t.subject else 'N/A' }}</strong></td>
-                            <td>{{ t.class_info.grade }}-{{ t.class_info.section if t.class_info else 'N/A' }}</td>
+                            <td>
+                                {% if t.class_info %}
+                                {{ t.class_info.grade }}-{{ t.class_info.section }}
+                                {% else %}
+                                N/A
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

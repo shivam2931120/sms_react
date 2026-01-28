@@ -72,3 +72,12 @@ htmlcov/
 
 # Vercel
 .vercel
+
+# Local utility scripts
+fix_schema.py
+seed_specific_users.py
+requirements_check.txt
+add_approval_column.py
+verify_signup.py
+verify_login.py
+seed_users.py
