@@ -666,31 +666,58 @@ body.public-layout {
 }
 
 /* ============================================
+   Sidebar Overlay
+   ============================================ */
+.sidebar-overlay {
+    display: none;
+    cursor: pointer;
+}
+
+/* ============================================
    Responsive Design
    ============================================ */
 @media (max-width: 992px) {
     .sidebar {
         transform: translateX(-100%);
         width: 100%;
-        /* Full screen sidebar on mobile */
-        max-width: 300px;
+        max-width: 280px;
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
     }
 
     .sidebar.show {
         transform: translateX(0);
     }
 
-    .sidebar.collapsed {
+    /* Sidebar Overlay */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(2px);
+        z-index: 999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+        opacity: 1;
     }
 
     #content,
     #content.expanded {
         margin-left: 0;
+        width: 100%;
     }
 
     .top-header {
         padding: 0 1rem;
+        gap: 1rem;
     }
 }
 
@@ -716,10 +743,7 @@ body.public-layout {
         margin: 1rem;
     }
 
-    .login-card {
-        padding: 1.5rem;
-        margin: 1rem;
-    }
+
 }
 
 /* ============================================
