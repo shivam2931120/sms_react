@@ -22,6 +22,9 @@
     #calendar {
         max-width: 100%;
         margin: 0 auto;
+        /* Make it less compact */
+        height: 80vh;
+        min-height: 500px;
     }
 
     /* Calendar Header Responsiveness */
@@ -38,6 +41,12 @@
     }
 
     @media (max-width: 768px) {
+        #calendar {
+            height: auto;
+            min-height: 600px;
+            /* Taller on mobile for list/day views */
+        }
+
         .fc-header-toolbar {
             flex-direction: column;
             align-items: stretch;
@@ -58,54 +67,85 @@
     }
 
     .fc {
-        --fc-border-color: var(--border-color);
-        --fc-button-bg-color: transparent;
-        --fc-button-border-color: var(--border-color);
-        --fc-button-text-color: var(--text-primary);
-        --fc-button-hover-bg-color: rgba(255, 255, 255, 0.1);
-        --fc-button-hover-border-color: var(--text-primary);
-        --fc-button-active-bg-color: var(--accent-primary);
-        --fc-button-active-border-color: var(--accent-primary);
-        --fc-today-bg-color: rgba(var(--accent-primary-rgb), 0.1);
-        --fc-event-bg-color: var(--accent-primary);
-        --fc-event-border-color: var(--accent-primary);
+        --fc-border-color: rgba(255, 255, 255, 0.15);
+        --fc-page-bg-color: transparent;
+        --fc-neutral-bg-color: rgba(255, 255, 255, 0.05);
+        /* Weekends/non-business days */
+        --fc-list-event-hover-bg-color: rgba(255, 255, 255, 0.1);
+
+        /* Button Colors */
+        --fc-button-text-color: #ffffff;
+        --fc-button-bg-color: rgba(255, 255, 255, 0.1);
+        --fc-button-border-color: rgba(255, 255, 255, 0.2);
+
+        --fc-button-hover-bg-color: rgba(255, 255, 255, 0.2);
+        --fc-button-hover-border-color: rgba(255, 255, 255, 0.3);
+
+        --fc-button-active-bg-color: var(--accent-primary, #0d6efd);
+        --fc-button-active-border-color: var(--accent-primary, #0d6efd);
+
+        --fc-today-bg-color: rgba(13, 110, 253, 0.15);
+        --fc-event-bg-color: var(--accent-primary, #3788d8);
+        --fc-event-border-color: var(--accent-primary, #3788d8);
+        --fc-event-text-color: #ffffff;
     }
 
+    /* Ensure text visibility in list view and headers */
+    .fc-theme-standard th,
+    .fc-theme-standard td {
+        border-color: var(--fc-border-color) !important;
+        color: #e0e0e0;
+    }
+
+    .fc-col-header-cell-cushion {
+        color: #ffffff !important;
+        text-decoration: none !important;
+        padding: 8px !important;
+        /* Touch target size */
+    }
+
+    .fc-daygrid-day-number {
+        color: #e0e0e0 !important;
+        text-decoration: none !important;
+        padding: 8px !important;
+    }
+
+    /* List View Specifics */
+    .fc-list-day-cushion {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .fc-list-event:hover td {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Button Specific Overrides for Clarity */
     .fc-button-primary {
-        background-color: transparent !important;
-        border-color: var(--border-color) !important;
-        color: var(--text-primary) !important;
+        background-color: var(--fc-button-bg-color) !important;
+        border-color: var(--fc-button-border-color) !important;
+        color: var(--fc-button-text-color) !important;
         text-transform: capitalize;
         font-weight: 500;
-        padding: 0.4rem 1rem;
-        transition: all 0.2s;
+        padding: 0.5rem 1rem !important;
+        /* Larger touch area */
+        opacity: 1 !important;
     }
 
     .fc-button-primary:hover {
-        background-color: var(--bg-hover) !important;
-        border-color: var(--text-muted) !important;
+        background-color: var(--fc-button-hover-bg-color) !important;
+        border-color: var(--fc-button-hover-border-color) !important;
     }
 
     .fc-button-primary:not(:disabled).fc-button-active,
     .fc-button-primary:not(:disabled):active {
-        background-color: var(--accent-primary) !important;
-        border-color: var(--accent-primary) !important;
-        color: white !important;
-    }
-
-    .fc-theme-standard td,
-    .fc-theme-standard th {
-        border-color: var(--border-color);
-    }
-
-    .fc-col-header-cell-cushion,
-    .fc-daygrid-day-number {
-        color: var(--text-primary);
-        text-decoration: none;
+        background-color: var(--fc-button-active-bg-color) !important;
+        border-color: var(--fc-button-active-border-color) !important;
+        color: #ffffff !important;
+        /* Ensure white text on active */
     }
 
     .fc-toolbar-title {
-        color: var(--text-primary) !important;
+        color: #ffffff !important;
         font-family: var(--font-heading);
         font-size: 1.5rem !important;
     }
